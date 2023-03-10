@@ -5,9 +5,7 @@ class Department (models.Model):
     name = models.CharField(max_length=100, unique=True) # can't name a departament as any other departament
     
     def __str__ (self): # Define what to show when the department is called in a template without fields 
-        return self.name
-    
-    
+        return self.name       
     
     def save(self, *args, **kwargs):
         creating = self.pk is None          # check if the department is being created or updated                                            
@@ -17,6 +15,7 @@ class Department (models.Model):
             Inventory.objects.create(name=self.name, department=self) 
                                             # a new Inventory will be auto created with the same name
                                             # and auto associated with its department.
+
 
 
 class Inventory (models.Model):
@@ -43,14 +42,11 @@ class Inventory (models.Model):
 
 class Category (models.Model):
     name = models.CharField(max_length=100,
-                            unique=True)    # can't name a new category as previous categories
-    
-    def __str__ (self):                     # Define what to show when the category is called in a template without fields
-        return self.name
-    
+                            unique=True)    # can't name a new category as previous categories 
+    def __str__ (self):                    
+        return self.name  # Define what to show when the category is called in a template without fields
     class Meta:
         verbose_name_plural = "categories" # Define the plural name show in admin panel
-
 
 
 

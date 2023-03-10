@@ -11,7 +11,7 @@ class Department (models.Model):
     
     def save(self, *args, **kwargs):
         creating = self.pk is None          # check if the department is being created or updated                                            
-        super().save(*args, **kwargs)       # when we save the instance
+        super().save(*args, **kwargs)       # each time we save the instance
         
         if creating:                        # when a new department is created
             Inventory.objects.create(name=self.name, department=self) 
@@ -27,11 +27,11 @@ class Inventory (models.Model):
     department = models.OneToOneField(
                             Department,                 # one department could have one inventory
                             
-                            on_delete=models.CASCADE,   # if department is deleted, delete its inventories
+                            on_delete=models.CASCADE,   # if department is deleted, delete its inventory
                             null= True, blank= True) 
         
     def __str__ (self): # Define what to show when the inventory is called in a template without fields
-        return self.name
+         return f"{self.name} department inventory" # ex: if name is "cience" it'll return "Cience department inventory"
 
     class Meta:
         verbose_name_plural = "inventory lists" # Define the plural name show in admin panel

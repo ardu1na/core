@@ -1,5 +1,5 @@
 from django.contrib import admin
-from inventory.models import Department, Inventory, Category, Item
+from inventory.models import Department, Category, Item
 
 # define info show in admin panel
 admin.site.site_header = 'College Inventory System'

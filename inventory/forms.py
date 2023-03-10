@@ -5,21 +5,25 @@ from inventory.models import Item, Category
 
 
 class ItemForm(forms.ModelForm):
-    category = forms.ModelChoiceField(queryset=Category.objects.all(), widget=forms.Select(attrs={
-                                    'class':"form-control",
-                                    'id':"category",
-                                    'placeholder':"category",}),
-                                empty_label = 'None',
-                                required=False)
     
+    category = forms.ModelChoiceField(
+                    queryset=Category.objects.all(),
+                    widget=forms.Select(
+                        attrs={
+                                'class':"form-control",
+                                'id':"category",
+                                'placeholder':"category",
+                                }),
+                    empty_label = 'None',
+                    required=False)
     class Meta:
         model = Item
-
         fields = ('name', 'category',)
-        
         widgets = {
-
-            'name' : forms.TextInput(attrs={'class':"form-control",
-            'id':"name",
-            'placeholder':"Name",}),
+            'name' : forms.TextInput(
+                attrs={
+                    'class':"form-control",
+                    'id':"name",
+                    'placeholder':"Name",
+                    }),
         }

@@ -17,6 +17,10 @@ def index(request):
 def items(request):
     items = Item.objects.all()
     addform=ItemForm()
+    search_query = request.GET.get('q')
+
+    if search_query:
+        items = items.filter(name__icontains=search_query)
 
     if request.method == 'GET':
         addform = ItemForm()
@@ -26,21 +30,23 @@ def items(request):
             addform = ItemForm(request.POST)
             if addform.is_valid():
                 addform.save()
-                print(addform)
                 return redirect(reverse('items')+ "?added")
             else:
-                return HttpResponseBadRequest("Ups! something gets wrong, go back and try again please.")
-            
+                return HttpResponseBadRequest("Ups! something gets wrong, go back and try again please.") 
     data = {
         'items' : items,
         'addform' : addform,
     }
     return render (request, 'items.html', data)
 
+
+
 def deleteitem(request, id):
     item = Item.objects.get(id=id)
     item.delete()
     return redirect(reverse('items')+ "?deleted")
+
+
 
 def edititem(request, id):
     edititem = Item.objects.get(id=id)
@@ -54,7 +60,6 @@ def edititem(request, id):
             }
         return render (request, 'edititem.html', data)
 
-    
     if request.method == 'POST':
         editform = ItemForm(request.POST, instance=edititem)
         if editform.is_valid():

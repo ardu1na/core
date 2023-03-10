@@ -6,14 +6,23 @@ class Department (models.Model):
     
     def __str__ (self): # Define what to show when the department is called in a template without fields 
         return self.name
-
-
+    
+    
+    
+    def save(self, *args, **kwargs):
+        creating = self.pk is None          # check if the department is being created or updated                                            
+        super().save(*args, **kwargs)       # when we save the instance
+        
+        if creating:                        # when a new department is created
+            Inventory.objects.create(name=self.name, department=self) 
+                                            # a new Inventory will be auto created with the same name
+                                            # and auto associated with his department.
 
 
 class Inventory (models.Model):
     name = models.CharField(
                             max_length=100,
-                            unique=True                 # can't name a new inventory as any of other inventory
+                            editable=False              # we auto create each department inventory 
                             )
     department = models.OneToOneField(
                             Department,                 # one department could have one inventory
@@ -26,6 +35,8 @@ class Inventory (models.Model):
 
     class Meta:
         verbose_name_plural = "inventory lists" # Define the plural name show in admin panel
+        
+    
 
 
 

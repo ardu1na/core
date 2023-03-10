@@ -1,3 +1,15 @@
 from django.shortcuts import render
 
-# Create your views here.
+from inventory.models import Item
+
+
+
+
+
+
+def index(request):
+    items = Item.objects.all()
+    data = {
+        'items' : items,
+    }
+    return render (request, 'index.html', data)

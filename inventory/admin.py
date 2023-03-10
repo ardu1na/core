@@ -9,16 +9,12 @@ admin.site.site_title = 'College Inventory System'
 
 class ItemInline(admin.StackedInline):
     model = Item.inventory.through
-    extra = 0
-    
-
-
+    extra = 0  
 
 
 @admin.register(Inventory)
 class InventoryAdmin(admin.ModelAdmin):
     inlines = [ItemInline]
-
 
 
 @admin.register(Category)

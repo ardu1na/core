@@ -1,14 +1,14 @@
 
 from django.urls import reverse_lazy
 from django.views.generic import View
-from django.http import HttpResponseRedirect
+from django.contrib.auth.views import LogoutView, LoginView
 
-class Login(View):
-    template_name = '/admin/login/'
+class Logout(LogoutView):
+    def get_success_url(self):
+        return reverse_lazy('index')
+
+class Login(LoginView):
     redirect_authenticated_user = True
     
     def get_success_url(self):
         return reverse_lazy('index') 
-
-def logout(request):
-    return HttpResponseRedirect('/admin/logout/')

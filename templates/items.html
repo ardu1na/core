@@ -96,7 +96,7 @@
                 <tbody>
                     {% for item in items %}
                         <tr>
-                            <td>{{item.name}}</td>
+                            <td><a href="{% url 'edititem' id=item.id %}">{{item.name}}</a></td>
                             <td>{{item.created_at|date:"d/m/Y"}}</td>
                             <td>{{item.updated_at|date:"d/m/Y"}}</td>
                             <td>
@@ -105,7 +105,7 @@
                                 {% endfor %}    
                             </td>
 
-                            <td>{{item.category}}</td>
+                            <td><a href="#">{{item.category}}</a></td>
 
                             <!-- ACTION BUTTONS -->
                             <td class="text-center borderless align-content-end">
@@ -121,7 +121,7 @@
 
 
                                 <!-- edit BUTTON -->
-                                <a href="#" class="shadow-sm btn btn-secondary mx-1 m-2">
+                                <a href="{% url 'edititem' id=item.id %}" class="shadow-sm btn btn-secondary mx-1 m-2">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </a>
 

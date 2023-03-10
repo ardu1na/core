@@ -37,14 +37,31 @@ def items(request):
     }
     return render (request, 'items.html', data)
 
-
-
-
 def deleteitem(request, id):
     item = Item.objects.get(id=id)
     item.delete()
     return redirect(reverse('items')+ "?deleted")
 
+def edititem(request, id):
+    edititem = Item.objects.get(id=id)
+
+    if request.method == "GET":
+        editform = ItemForm(instance=edititem)
+        data = {
+            'editform': editform,
+            'edititem': edititem,
+            'id': id,
+            }
+        return render (request, 'edititem.html', data)
+
+    
+    if request.method == 'POST':
+        editform = ItemForm(request.POST, instance=edititem)
+        if editform.is_valid():
+            editform.save()
+            return redirect(reverse('items')+ "?changed")
+        else:
+            return HttpResponseBadRequest("Ups! something gets wrong, go back and try again please.")
 
 
 

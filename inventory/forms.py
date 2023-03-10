@@ -9,7 +9,7 @@ class ItemForm(forms.ModelForm):
                                     'class':"form-control",
                                     'id':"category",
                                     'placeholder':"category",}),
-                                empty_label = 'Assign a category',
+                                empty_label = 'None',
                                 required=False)
     
     class Meta:

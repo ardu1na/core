@@ -1,0 +1,40 @@
+{% extends 'layout/base.html' %}
+{% block 'title' %} Change {{edititem.name}} {% endblock %}
+
+{% block 'content' %}
+
+    
+
+    <div class="container py-5 ">
+        <h1 class="my-3  pb-5">Edit item {{edititem.id}} - {{edititem.name}} </h1>
+
+
+        <!--- EDIT  ITEM FORM -->
+        <form  method="post">
+            {% csrf_token %}
+            <div class="modal-body">
+                <p class="fs-5">
+                    Name 
+                </p>
+                <div class="form-group mb-5 d-flex flex-row">
+                    {{editform.name}}
+                </div>
+                <p class="fs-5">
+                    Category 
+                </p>
+                <div class=" my-3 d-flex flex-row m-auto">
+                    <div class="col-11">   {{editform.category}}                             </div>
+                    <div><a href="#" class="btn btn-outline-primary"><i class="fs-5 fa-solid fa-plus"></i></a></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex text-center">
+                    <button type="submit" class="btn btn-primary px-3" name="edititem">
+                    <i class="fa-solid fa-check me-2"></i> Submit</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+
+{% endblock %}

@@ -16,7 +16,7 @@ class Inventory (models.Model):
                             unique=True                 # can't name a new inventory as any of other inventory
                             )
     department = models.OneToOneField(
-                            Department,                 # one department has one inventory, in the first message say it has to be
+                            Department,                 # one department has one inventory, in the first message you said it has to be
                                                         # fk but if each department has just one inventorylist, this is better
                             
                             on_delete=models.CASCADE,   # if department is deleted, delete his inventory
@@ -56,10 +56,10 @@ class Item (models.Model):
                                                             # ex: inventory.items return all items of a desired Inventory 
     
     category = models.ForeignKey(
-                                Category,                   # one category has many items
+                                Category,                   # one category has many items but one item  just has one category
                                 on_delete=models.SET_NULL,  # if category is deleted, set category null
                                 null= True, blank= True,
-                                related_name="items")       # how to call all items from category
+                                related_name="items")       # how to call all items from a category
                                                             # ex: category.items return all items of a desired category 
      
      

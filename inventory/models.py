@@ -27,7 +27,7 @@ class Inventory (models.Model):
                             Department,                 # one department could have one inventory
                             
                             on_delete=models.CASCADE,   # if department is deleted, delete its inventory
-                            null= True, blank= True) 
+                            ) 
         
     def __str__ (self): # Define what to show when the inventory is called in a template without fields
          return f"{self.name} department inventory" # ex: if name is "science" it'll return "Science department inventory"
@@ -50,6 +50,9 @@ class Category (models.Model):
 
 
 
+
+
+
 class Item (models.Model):
     name = models.CharField(max_length=100,
                             unique=True)                # can't name a new item as any of previous items
@@ -67,7 +70,7 @@ class Item (models.Model):
     category = models.ForeignKey(                           # one category has many items but one item just has one category
                                 Category,                   
                                 on_delete=models.SET_NULL,  # if category is deleted, set category null
-                                null= True, blank= True,
+                                null= True, blank= True,    # non required field
                                 related_name="items")       # how to call all items from a category
                                                             # ex: category.items return all items of a desired category 
      

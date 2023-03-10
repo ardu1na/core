@@ -13,13 +13,13 @@ class Department (models.Model):
 class Inventory (models.Model):
     name = models.CharField(
                             max_length=100,
-                            unique=True                 # can't name a new list as any of other list
+                            unique=True                 # can't name a new inventory as any of other inventory
                             )
     department = models.OneToOneField(
-                            Department,                 # one department has one list, in the first message say it has to be
+                            Department,                 # one department has one inventory, in the first message say it has to be
                                                         # fk but if each department has just one inventorylist, this is better
                             
-                            on_delete=models.CASCADE,   # if department is deleted, delete the list
+                            on_delete=models.CASCADE,   # if department is deleted, delete his inventory
                             null= True, blank= True)
     
     def __str__ (self): # Define what to show when the inventory is called in a template without fields

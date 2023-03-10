@@ -7,17 +7,18 @@ admin.site.index_title = 'Home'
 admin.site.site_title = 'College Inventory System'
 
 
-@admin.register(Department)
-class DepartmentAdmin(admin.ModelAdmin):
-    list_display = ('name',)
-    search_fields = ('name',)
+class ItemInline(admin.StackedInline):
+    model = Item.inventory.through
+    extra = 0
+    
+
+
 
 
 @admin.register(Inventory)
 class InventoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'department')
-    search_fields = ('name', 'department__name')
-    list_filter = ('department',)
+    inlines = [ItemInline]
+
 
 
 @admin.register(Category)
@@ -32,3 +33,6 @@ class ItemAdmin(admin.ModelAdmin):
     search_fields = ('name', 'category__name', 'inventory__name')
     list_filter = ('inventory__department', 'category')
     filter_horizontal = ('inventory',)
+
+
+admin.site.register(Department)

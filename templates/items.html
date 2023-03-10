@@ -1,0 +1,141 @@
+{% extends 'layout/base.html' %}
+{% block 'title' %} Items {% endblock %}
+
+{% block 'content' %}
+
+
+
+    <!-- Add Item Modal -->
+    <div class="modal fade " id="addItem" tabindex="-1" aria-labelledby="addItemLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="addItemLabel">Add a new Item</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+            
+                <!--- ADD  ITEM FORM -->
+                <form  method="post">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="form-group mb-5 d-flex flex-row">
+                            {{addform.name}}
+                        </div>
+                        <div class="fs-5">
+                            Category 
+                        </div>
+                        <div class=" my-3 d-flex flex-row m-auto">
+                            <div class="col-11">   {{addform.category}}                             </div>
+                            <div><a href="#" class="btn btn-outline-primary"><i class="fs-5 fa-solid fa-plus"></i></a></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="d-flex text-center">
+                            <button type="submit" class="btn btn-primary px-3" name="additem">
+                            <i class="fa-solid fa-check me-2"></i> Submit</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <!-- END Add Item Modal -->
+
+
+
+    <!-- DELETE ITEM ALERT -->
+    <div class="my-2">
+        {% if 'deleted' in request.GET %}
+        <div class="alert alert-danger alert-dismissible fade show mx-5" role="alert">
+            <i class="fa-regular fa-circle-xmark me-2"></i> Item deleted!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+    </div>
+    <!-- ADD ITEM ALERT -->
+    <div class="my-2">
+        {% if 'added' in request.GET %}
+        <div class="alert alert-success alert-dismissible fade show mx-5" role="alert">
+            ☑ Item added successfully!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+    </div>
+
+
+
+
+    <div class="container py-5 ">
+        <h1 class="my-3 text-center">Items</h1>
+
+
+        <div class="py-1 d-flex flex-row-reverse mx-5">
+            <button type="button" class="btn btn-success fs-5 shadow-sm" data-bs-toggle="modal" data-bs-target="#addItem">
+                <i class="fa-solid fa-plus me-2"></i> Add new
+            </button>
+        </div>  
+
+
+        {% if items %}
+
+        <!-- TABLE ALL itemS -->
+        <div class="py-3 px-3 my-4 rounded-4 shadow-sm bg-white text-center">
+            <table class="table align-middle table-hover rounded">
+                <thead>
+                <tr>
+                    <th scope="col">NAME</th>
+                    <th scope="col">DATE CREATED</th>
+                    <th scope="col">DATE UPDATED</th>
+                    <th scope="col">PRESENT IN</th>
+                    <th scope="col">CATEGORY</th>
+
+                    <th class="text-center"></th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                        <tr>
+                            <td>{{item.name}}</td>
+                            <td>{{item.created_at|date:"d/m/Y"}}</td>
+                            <td>{{item.updated_at|date:"d/m/Y"}}</td>
+                            <td>
+                                {% for inventory in item.inventory.all %}
+                                    {{inventory}} /
+                                {% endfor %}    
+                            </td>
+
+                            <td>{{item.category}}</td>
+
+                            <!-- ACTION BUTTONS -->
+                            <td class="text-center borderless align-content-end">
+
+                                <!-- delete BUTTON -->
+                                <button type="button" class="shadow-sm btn btn-danger m-2" data-bs-toggle="modal" data-bs-target="#deleteitem{{item.id}}">
+                                    <i class="fa-solid fa-trash fs-7 "></i>
+                                </button>
+
+                                <div class="modal fade " id="deleteitem{{item.id}}" tabindex="-1" aria-labelledby="deleteitemLabel" aria-hidden="true">
+                                    {% include 'deleteitem.html' %}
+                                </div>
+
+
+                                <!-- edit BUTTON -->
+                                <a href="#" class="shadow-sm btn btn-secondary mx-1 m-2">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </a>
+
+                            </td>
+                        </tr>                  
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>     <!-- END TABLE ALL itemS -->
+
+
+        {% else %}
+            <p> No items recorded </p>
+        {% endif %}      
+
+    </div>    
+{% endblock %}

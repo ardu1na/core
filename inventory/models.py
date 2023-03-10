@@ -30,7 +30,7 @@ class Inventory (models.Model):
                             ) 
         
     def __str__ (self): # Define what to show when the inventory is called in a template without fields
-         return f"{self.name} department inventory" # ex: if name is "science" it'll return "Science department inventory"
+         return f"{self.name} Dept." # ex: if name is "science" it'll return "Science department inventory"
 
     class Meta:
         verbose_name_plural = "inventory lists" # Define the plural name show in admin panel
@@ -63,8 +63,9 @@ class Item (models.Model):
        
     inventory = models.ManyToManyField(                     # one inventory has many items and one item could be in many inventories
                                 Inventory,                  
-                                related_name="items")       # how to call all items from a Inventory
-                                                            # ex: inventory.items return all items of a desired Inventory 
+                                related_name="items",       # how to call all items from a Inventory
+                                )      # ex: inventory.items return all items of a desired Inventory 
+                                                            
     
        
     category = models.ForeignKey(                           # one category has many items but one item just has one category

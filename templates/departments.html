@@ -1,0 +1,25 @@
+{% extends 'layout/base.html' %}
+{% block 'title' %} Departments {% endblock %}
+
+{% block 'content' %}
+
+
+
+<div class="container py-5">
+    <h3>Departments</h3>
+
+
+
+    {% if departments %}
+        <ul>
+        {% for department in departments %}
+            <li>{{department.name}}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p> No items recorded </p>
+    {% endif %}
+
+
+</div>    
+{% endblock %}

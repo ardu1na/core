@@ -1,6 +1,5 @@
 
 from django.urls import reverse_lazy
-from django.views.generic import View
 from django.contrib.auth.views import LogoutView, LoginView
 
 class Logout(LogoutView):

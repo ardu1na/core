@@ -16,15 +16,16 @@ class Inventory (models.Model):
                             unique=True                 # can't name a new inventory as any of other inventory
                             )
     department = models.OneToOneField(
-                            Department,                 # one department has one inventory, in the first message you said it has to be
-                                                        # fk but if each department has just one inventorylist, this is better
+                            Department,                 # one department could have one inventory
                             
-                            on_delete=models.CASCADE,   # if department is deleted, delete his inventory
-                            null= True, blank= True)
-    
+                            on_delete=models.CASCADE,   # if department is deleted, delete its inventories
+                            null= True, blank= True) 
+        
     def __str__ (self): # Define what to show when the inventory is called in a template without fields
         return self.name
 
+    class Meta:
+        verbose_name_plural = "inventory lists" # Define the plural name show in admin panel
 
 
 
@@ -35,7 +36,9 @@ class Category (models.Model):
     
     def __str__ (self):                     # Define what to show when the category is called in a template without fields
         return self.name
-
+    
+    class Meta:
+        verbose_name_plural = "categories" # Define the plural name show in admin panel
 
 
 
@@ -49,14 +52,17 @@ class Item (models.Model):
     updated_at = models.DateTimeField(
                             auto_now=True)              # Automatically set the field to now every time the item is saved.
     
+    
+    
     inventory = models.ManyToManyField(
-                                Inventory,             # one inventory has many items and one item could be in many inventories
-                                null= True, blank= True,
+                                Inventory,                  # one inventory has many items and one item could be in many inventories
                                 related_name="items")       # how to call all items from Inventory
                                                             # ex: inventory.items return all items of a desired Inventory 
     
-    category = models.ForeignKey(
-                                Category,                   # one category has many items but one item  just has one category
+    
+    
+    category = models.ForeignKey(                           # one category has many items but one item just has one category
+                                Category,                   
                                 on_delete=models.SET_NULL,  # if category is deleted, set category null
                                 null= True, blank= True,
                                 related_name="items")       # how to call all items from a category
@@ -65,4 +71,5 @@ class Item (models.Model):
      
     def __str__ (self): # Define what to show when the item is called in a template without fields 
         return self.name
+    
     

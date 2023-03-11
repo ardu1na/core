@@ -66,7 +66,7 @@
  <div class="my-2">
     {% if 'changed' in request.GET %}
     <div class="alert alert-info alert-dismissible fade show mx-5" role="alert">
-        ☑ Item chhanged successfully!
+        ☑ Item changed successfully!
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     {% endif %}
@@ -74,75 +74,74 @@
 
 
 
-    <div class="container py-5 ">
+    <div class="container">
+        {% if items %}
+            <h1 class="my-3 text-center">Items</h1>
 
-    {% if items %}
-    <h1 class="my-3 text-center">Items</h1>
+            <div class="py-1 mb-4 mx-5">
+                <form class="d-flex flex-row" action="{% url 'items' %}" method="GET">
+                    <input class="form-control"  type="text" name="q" placeholder="Search items...">
+                    <button class="btn btn-dark"  type="submit">Search</button>
+                </form>
+            </div>  
 
-        <div class="py-1 mb-4 mx-5">
-            <form class="d-flex flex-row" action="{% url 'items' %}" method="GET">
-                <input class="form-control"  type="text" name="q" placeholder="Search items...">
-                <button class="btn btn-dark"  type="submit">Search</button>
-            </form>
-        </div>  
+            <!-- TABLE ALL itemS -->
+            <div class="py-3 px-3 my-4 text-center">
+                <table class="table table-responsive align-middle table-hover rounded">
+                    <thead>
+                    <tr>
+                        <th scope="col">NAME</th>
+                        <th scope="col">DATE CREATED</th>
+                        <th scope="col">DATE UPDATED</th>
+                        <th scope="col">PRESENT IN</th>
+                        <th scope="col">CATEGORY</th>
 
-        <!-- TABLE ALL itemS -->
-        <div class="py-3 px-3 my-4 rounded-4 shadow-sm bg-white text-center">
-            <table class="table align-middle table-hover rounded">
-                <thead>
-                <tr>
-                    <th scope="col">NAME</th>
-                    <th scope="col">DATE CREATED</th>
-                    <th scope="col">DATE UPDATED</th>
-                    <th scope="col">PRESENT IN</th>
-                    <th scope="col">CATEGORY</th>
+                        <th class="text-center"><div class="d-flex flex-row-reverse pb-4">
+                            <button type="button" class="btn btn-light fs-5 shadow-l" data-bs-toggle="modal" data-bs-target="#addItem">
+                                <i class="fa-solid fa-plus me-2"></i> <strong>Add new</strong>
+                            </button>
+                        </div>  </th>
+                    </tr>
+                    </thead>
 
-                    <th class="text-center"><div class="d-flex flex-row-reverse pb-4">
-                        <button type="button" class="btn btn-light fs-5 shadow-l" data-bs-toggle="modal" data-bs-target="#addItem">
-                            <i class="fa-solid fa-plus me-2"></i> <strong>Add new</strong>
-                        </button>
-                    </div>  </th>
-                </tr>
-                </thead>
+                    <tbody>
+                        {% for item in items %}
+                            <tr>
+                                <td><a href="{% url 'edititem' id=item.id %}">{{item.name}}</a></td>
+                                <td>{{item.created_at|date:"d/m/Y"}}</td>
+                                <td>{{item.updated_at|date:"d/m/Y"}}</td>
+                                <td>
+                                    {% for inventory in item.inventory.all %}
+                                        {{inventory}} /
+                                    {% endfor %}    
+                                </td>
 
-                <tbody>
-                    {% for item in items %}
-                        <tr>
-                            <td><a href="{% url 'edititem' id=item.id %}">{{item.name}}</a></td>
-                            <td>{{item.created_at|date:"d/m/Y"}}</td>
-                            <td>{{item.updated_at|date:"d/m/Y"}}</td>
-                            <td>
-                                {% for inventory in item.inventory.all %}
-                                    {{inventory}} /
-                                {% endfor %}    
-                            </td>
+                                <td><a href="#">{{item.category}}</a></td>
 
-                            <td><a href="#">{{item.category}}</a></td>
+                                <!-- ACTION BUTTONS -->
+                                <td class="text-center borderless align-content-end">
 
-                            <!-- ACTION BUTTONS -->
-                            <td class="text-center borderless align-content-end">
+                                    <!-- delete BUTTON -->
+                                    <button type="button" class="shadow-sm btn btn-danger m-2" data-bs-toggle="modal" data-bs-target="#deleteitem{{item.id}}">
+                                        <i class="fa-solid fa-trash fs-7 "></i>
+                                    </button>
 
-                                <!-- delete BUTTON -->
-                                <button type="button" class="shadow-sm btn btn-danger m-2" data-bs-toggle="modal" data-bs-target="#deleteitem{{item.id}}">
-                                    <i class="fa-solid fa-trash fs-7 "></i>
-                                </button>
-
-                                <div class="modal fade " id="deleteitem{{item.id}}" tabindex="-1" aria-labelledby="deleteitemLabel" aria-hidden="true">
-                                    {% include 'deleteitem.html' %}
-                                </div>
+                                    <div class="modal fade " id="deleteitem{{item.id}}" tabindex="-1" aria-labelledby="deleteitemLabel" aria-hidden="true">
+                                        {% include 'deleteitem.html' %}
+                                    </div>
 
 
-                                <!-- edit BUTTON -->
-                                <a href="{% url 'edititem' id=item.id %}" class="shadow-sm btn btn-secondary mx-1 m-2">
-                                    <i class="fa-solid fa-pen-to-square"></i>
-                                </a>
+                                    <!-- edit BUTTON -->
+                                    <a href="{% url 'edititem' id=item.id %}" class="shadow-sm btn btn-secondary mx-1 m-2">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </a>
 
-                            </td>
-                        </tr>                  
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>     <!-- END TABLE ALL itemS -->
+                                </td>
+                            </tr>                  
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>     <!-- END TABLE ALL itemS -->
 
 
         {% else %}
@@ -154,6 +153,6 @@
                 </button>
             </div> 
 
-    {% endif %}      
+        {% endif %}      
     </div>    
 {% endblock %}

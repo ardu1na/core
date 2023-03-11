@@ -4,7 +4,7 @@ from django.http import HttpResponseBadRequest
 
 
 from inventory.models import Item, Department
-from inventory.forms import ItemForm
+from inventory.forms import ItemForm, DepartmentForm
 
 
 def index(request):    
@@ -73,9 +73,57 @@ def edititem(request, id):
 
 
 
+
 def departments(request):
     departments = Department.objects.all()
+    addform=DepartmentForm()
+    search_query = request.GET.get('q')
+
+    if search_query:
+        departments = departments.filter(name__icontains=search_query)
+
+    if request.method == 'GET':
+        addform = DepartmentForm()
+        
+    if request.method == 'POST':
+        if "adddepartment" in request.POST:
+            addform = DepartmentForm(request.POST)
+            if addform.is_valid():
+                addform.save()
+                return redirect(reverse('departments')+ "?added")
+            else:
+                return HttpResponseBadRequest("Ups! something gets wrong, go back and try again please.") 
     data = {
         'departments' : departments,
+        'addform' : addform,
     }
     return render (request, 'departments.html', data)
+
+
+
+def deletedepartment(request, id):
+    department = Department.objects.get(id=id)
+    department.delete()
+    return redirect(reverse('departments')+ "?deleted")
+
+
+
+def editdepartment(request, id):
+    editdepartment = Department.objects.get(id=id)
+
+    if request.method == "GET":
+        editform = DepartmentForm(instance=editdepartment)
+        data = {
+            'editform': editform,
+            'editdepartment': editdepartment,
+            'id': id,
+            }
+        return render (request, 'editdepartment.html', data)
+
+    if request.method == 'POST':
+        editform = DepartmentForm(request.POST, instance=editdepartment)
+        if editform.is_valid():
+            editform.save()
+            return redirect(reverse('departments')+ "?changed")
+        else:
+            return HttpResponseBadRequest("Ups! something gets wrong, go back and try again please.")

@@ -5,21 +5,160 @@
 
 
 
-<div class="container py-5">
-    <h3>Departments</h3>
+    <!-- Add Department Modal -->
+    <div class="modal fade " id="addDepartment" tabindex="-1" aria-labelledby="addDepartmentLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="addDepartmentLabel">Add a new Department</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+            
+                <!--- ADD  DEPT. FORM -->
+                <form  method="post">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="form-group mb-5 d-flex flex-row">
+                            {{addform.name}}
+                        </div>
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <div class="d-flex text-center">
+                            <button type="submit" class="btn btn-primary px-3" name="adddepartment">
+                            <i class="fa-solid fa-check me-2"></i> Submit</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <!-- END Add Department Modal -->
 
 
 
-    {% if departments %}
-        <ul>
-        {% for department in departments %}
-            <li>{{department.name}}</li>
-        {% endfor %}
-        </ul>
-    {% else %}
-        <p> No items recorded </p>
+    <!-- DELETE DEPT. ALERT -->
+    <div class="my-2">
+        {% if 'deleted' in request.GET %}
+        <div class="alert alert-danger alert-dismissible fade show mx-5" role="alert">
+            <i class="fa-regular fa-circle-xmark me-2"></i> Department deleted!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+    </div>
+    <!-- ADD DEPT. ALERT -->
+    <div class="my-2">
+        {% if 'added' in request.GET %}
+        <div class="alert alert-success alert-dismissible fade show mx-5" role="alert">
+            ☑ Department added successfully!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+    </div>
+ <!-- EDITED DEPT. ALERT -->
+ <div class="my-2">
+    {% if 'changed' in request.GET %}
+    <div class="alert alert-info alert-dismissible fade show mx-5" role="alert">
+        ☑ Department changed successfully!
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
     {% endif %}
+</div>
 
 
-</div>    
+
+    <div class="container mx-5">
+        {% if departments %}
+            <h1 class="my-3 text-center">Departments</h1>
+
+            <div class="py-1 mb-4 mx-5">
+                <form class="d-flex flex-row" action="{% url 'departments' %}" method="GET">
+                    <input class="form-control"  type="text" name="q" placeholder="Search departments...">
+                    <button class="btn btn-dark"  type="submit">Search</button>
+                </form>
+            </div>  
+
+            <!-- TABLE ALL departmentS -->
+            <div class="py-3 px-3 my-4 text-center">
+                <table class="table table-responsive align-middle table-hover rounded">
+                    <thead>
+                    <tr>
+                        <th scope="col">DEPT.</th>
+                        <th scope="col">ITEMS</th>
+
+                        <th class="text-center">
+                            <div class="d-flex flex-row-reverse pb-4">
+                                <button type="button" class="btn btn-light fs-5 shadow-l" data-bs-toggle="modal" data-bs-target="#addDepartment">
+                                    <i class="fa-solid fa-plus me-2"></i> <strong>Add new</strong>
+                                </button>
+                            </div>
+                        </th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for department in departments %}
+                            <tr>
+                                <td><a href="{% url 'editdepartment' id=department.id %}">{{department.name}}</a></td>
+                                
+                                <td><a href="#">{{department.name}} INVENTORY </a></td>
+
+
+                                <!-- ACTION BUTTONS -->
+                                <td class="borderless">
+
+                                    <!-- delete BUTTON -->
+                                    <button type="button" class="shadow-sm btn btn-danger me-2" data-bs-toggle="modal" data-bs-target="#deletedepartment{{department.id}}">
+                                        <i class="fa-solid fa-trash fs-7 "></i>
+                                    </button>
+
+                                    <div class="modal fade " id="deletedepartment{{department.id}}" tabindex="-1" aria-labelledby="deletedepartmentLabel" aria-hidden="true">
+                                        {% include 'deletedepartment.html' %}
+                                    </div>
+
+
+                                    <!-- edit BUTTON -->
+                                    <a href="{% url 'editdepartment' id=department.id %}" class="shadow-sm btn btn-secondary">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </a>
+
+                                </td>
+                            </tr>                  
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>     <!-- END TABLE ALL departmentS -->
+
+
+        {% elif 'q' in request.GET %}
+            <div class="col-12 d-flex flex-row justify-content-around py-4">
+
+                <h5> No departments matching... </h5>
+
+                <div class="py-1 mb-4 mx-5">
+                    <form class="d-flex flex-row" action="{% url 'departments' %}" method="GET">
+                        <input class="form-control"  type="text" name="q" placeholder="Search departments...">
+                        <button class="btn btn-dark"  type="submit">Search</button>
+                    </form>
+                </div>  
+            </div> 
+            <div class="py-1 mb-4 mx-5">
+
+                <a href="{% url 'departments' %}" class="btn fs-7 mx-2">
+                    <i class="fa-solid fa-arrow-left me-2 fs-7"></i> Return
+                </a>
+            </div>  
+
+
+        {% else %}
+        <div class="col-12 d-flex flex-row justify-content-around pb-4">
+            <h3> No departments yet... </h3>
+
+            <button type="button" class="btn btn-light fs-4 shadow-l px-4" data-bs-toggle="modal" data-bs-target="#addDepartment">
+                <i class="fa-solid fa-plus me-2"></i> <strong>Add some</strong>
+            </button>
+        </div> 
+        {% endif %}      
+    </div>    
 {% endblock %}

@@ -1,14 +1,26 @@
 
 from django import forms
 
-from inventory.models import Item, Category, Department
+from inventory.models import Item, Category, Department, Inventory
 
 class CategoryForm(forms.ModelForm):
     class Meta:
         model= Category
         fields = ('name',)
         
-        
+class AddItemForm(forms.ModelForm):
+    items = forms.ModelMultipleChoiceField(
+                    queryset=Item.objects.all(),
+                    widget=forms.SelectMultiple(
+                        attrs={
+                                'class':"form-control",
+                                'id':"item",
+                                'placeholder':"items",
+                                }),
+                    )
+    class Meta:
+        model = Inventory
+        fields = ('items',)
         
 
 class ItemForm(forms.ModelForm):    

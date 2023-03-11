@@ -4,7 +4,44 @@
 {% block 'content' %}
 
 
+{% if 'id'  in request.resolver_match.kwargs %}
+<!-- Add Item into inventory Modal -->
+<div class="modal fade " id="addItem" tabindex="-1" aria-labelledby="addItemLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="addItemLabel">Add a new Item</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+        
+            <!--- ADD  ITEM FORM -->
+            <form  method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="form-group mb-5 d-flex flex-row">
+                        {{addform.name}}
+                    </div>
+                    <div class="fs-5">
+                        Category 
+                    </div>
+                    <div class=" my-3 d-flex flex-row m-auto">
+                        <div class="col-11">   {{addform.category}}                             </div>
+                        <div><a href="{% url 'addnewcategory' %}" class="btn btn-outline-primary"><i class="fs-5 fa-solid fa-plus"></i></a></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="d-flex text-center">
+                        <button type="submit" class="btn btn-primary px-3" name="additem">
+                        <i class="fa-solid fa-check me-2"></i> Submit</button>
+                    </div>
+                </div>
+            </form>
 
+        </div>
+    </div>
+</div>
+<!-- END Add Item Modal -->
+{% else %}
     <!-- Add Item Modal -->
     <div class="modal fade " id="addItem" tabindex="-1" aria-labelledby="addItemLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -26,7 +63,7 @@
                         </div>
                         <div class=" my-3 d-flex flex-row m-auto">
                             <div class="col-11">   {{addform.category}}                             </div>
-                            <div><a href="#" class="btn btn-outline-primary"><i class="fs-5 fa-solid fa-plus"></i></a></div>
+                            <div><a href="{% url 'addnewcategory' %}" class="btn btn-outline-primary"><i class="fs-5 fa-solid fa-plus"></i></a></div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -41,6 +78,7 @@
         </div>
     </div>
     <!-- END Add Item Modal -->
+    {% endif %}
 
 
 
@@ -130,8 +168,11 @@
                                     {% endfor %}    
                                 </td>
                                 {% endif %}
-
+                                {% if item.category %}
                                 <td><a href="{% url 'editcategory' id=item.category.id %}">{{item.category}}</a></td>
+                                {% else %}
+                                <td>None</td>
+                                {% endif %}
 
                                 <!-- ACTION BUTTONS -->
                                 <td class="text-center borderless align-content-end">

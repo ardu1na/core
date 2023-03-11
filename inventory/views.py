@@ -5,7 +5,7 @@ from django.db.models import Q
 
 
 from inventory.models import Item, Department, Inventory, Category
-from inventory.forms import ItemForm, DepartmentForm, CategoryForm
+from inventory.forms import ItemForm, DepartmentForm, CategoryForm, AddItemForm
 
 
 def index(request):    
@@ -17,7 +17,21 @@ def items(request, id=None):
     if id:
         inventory = Inventory.objects.get(id=id)
         items = Item.objects.filter(inventory__id=inventory.id)
-               
+        if request.method == 'GET':
+            addform = AddItemForm()
+
+        if request.method == 'POST':
+            if "additem" in request.POST:
+                addform = AddItemForm(request.POST)
+                if addform.is_valid():
+                    add_items = addform.cleaned_data['items']
+                    for item in add_items:
+                        item.inventory = inventory
+                        item.save()
+                    return redirect(reverse('items', args=[id]) + "?added")
+                else:
+                    return HttpResponseBadRequest("Ups! something gets wrong, go back and try again please.")
+
         search_query = request.GET.get('q')
 
         if search_query:
@@ -26,7 +40,7 @@ def items(request, id=None):
         data = {
         'items' : items,
         'inventory' : inventory,
-        'addform':""
+        'addform': addform
     }
 
     else:
@@ -84,25 +98,39 @@ def edititem(request, id):
             return HttpResponseBadRequest("Ups! something gets wrong, go back and try again please.")
 
 
-def addcategory(request, id):
-    item = Item.objects.get(id=id)
-
-    if request.method == "GET":
-        addform = CategoryForm()
+def addcategory(request, id=None):
+    if id:
+        item = Item.objects.get(id=id)
+        if request.method == "GET":
+            addform = CategoryForm()
         
 
-    if request.method == 'POST':
-        addform = CategoryForm(request.POST)
-        if addform.is_valid():
-            addform.save()
-            return redirect(reverse('edititem', args=[id]) + "?newcategory")
-        else:
-            return HttpResponseBadRequest("Ups! something gets wrong, go back and try again please.")
+        if request.method == 'POST':
+            addform = CategoryForm(request.POST)
+            if addform.is_valid():
+                addform.save()
+                return redirect(reverse('edititem', args=[id]) + "?newcategory")
+            else:
+                return HttpResponseBadRequest("Ups! something gets wrong, go back and try again please.")
+    else:
+        if request.method == "GET":
+            addform = CategoryForm()
+        
+
+        if request.method == 'POST':
+            addform = CategoryForm(request.POST)
+            if addform.is_valid():
+                addform.save()
+                return redirect(reverse('items') + "?newcategory")
+            else:
+                return HttpResponseBadRequest("Ups! something gets wrong, go back and try again please.")
+    
     
     data = {
             'addform': addform,
             }
     return render (request, 'addcategory.html', data)
+
 
 def editcategory(request, id):
     category = Category.objects.get(id=id)

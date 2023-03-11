@@ -3,6 +3,13 @@ from django import forms
 
 from inventory.models import Item, Category, Department
 
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model= Category
+        fields = ('name',)
+        
+        
+        
 
 class ItemForm(forms.ModelForm):    
     category = forms.ModelChoiceField(

@@ -10,6 +10,8 @@ urlpatterns = [
     path('deleteitem/<int:id>/', views.deleteitem, name="deleteitem"),
     path('edititem/<int:id>/', views.edititem, name="edititem"),
 
+    path('category/add/<int:id>/', views.addcategory, name="addcategory"),
+
 
     path('departments/', login_required(views.departments), name='departments'),
     path('deletedepartment/<int:id>/', views.deletedepartment, name="deletedepartment"),

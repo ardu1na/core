@@ -3,14 +3,12 @@ from  django.urls import reverse
 from django.http import HttpResponseBadRequest
 
 
-from inventory.models import Item, Department, Inventory
-from inventory.forms import ItemForm, DepartmentForm
+from inventory.models import Item, Department, Inventory, Category
+from inventory.forms import ItemForm, DepartmentForm, CategoryForm
 
 
 def index(request):    
     return render (request, 'index.html', {})
-
-
 
 
 
@@ -85,6 +83,25 @@ def edititem(request, id):
             return HttpResponseBadRequest("Ups! something gets wrong, go back and try again please.")
 
 
+def addcategory(request, id):
+    item = Item.objects.get(id=id)
+
+    if request.method == "GET":
+        addform = CategoryForm()
+        
+
+    if request.method == 'POST':
+        addform = CategoryForm(request.POST)
+        if addform.is_valid():
+            addform.save()
+            return redirect(reverse('edititem', args=[id]) + "?newcategory")
+        else:
+            return HttpResponseBadRequest("Ups! something gets wrong, go back and try again please.")
+    
+    data = {
+            'addform': addform,
+            }
+    return render (request, 'addcategory.html', data)
 
 
 

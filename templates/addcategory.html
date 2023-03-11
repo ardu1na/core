@@ -1,16 +1,8 @@
 {% extends 'layout/base.html' %}
-{% block 'title' %} Change {{edititem.name}} {% endblock %}
+{% block 'title' %} Add Category {% endblock %}
 
 {% block 'content' %}
-<!-- new category ALERT -->
-<div class="my-2">
-    {% if 'newcategory' in request.GET %}
-    <div class="alert alert-success alert-dismissible fade show mx-5" role="alert">
-        ☑ Category added successfully!
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    {% endif %}
-</div>
+
     
 
     <div class="container py-3 ">
@@ -18,7 +10,7 @@
             <div class="col-xl-10 m-auto">
                 <div class="card">
                     <div class="card-body p-4">
-                        <h2 class="my-3  pb-5">Change item {{edititem.id}} - {{edititem.name}} </h2>
+                        <h2 class="my-3  pb-5">Create a new category for items</h2>
                         <hr>
 
                         <!--- EDIT  ITEM FORM -->
@@ -28,17 +20,9 @@
                                     Name 
                                 </p>
                                 <div class="form-group mb-5 d-flex flex-row">
-                                    {{editform.name}}
+                                    {{addform.name}}
                                 </div>
-                                <p class="fs-5 mx-4">
-                                    Category 
-                                </p>
-                                <div class=" my-3 d-flex flex-row m-auto ">
-
-                                    <div><a href="{% url 'addcategory' id=edititem.id %}" class="btn btn-outline-primary"><i class="fs-5 fa-solid fa-plus"></i></a></div>
-
-                                      {{editform.category}}                        
-                                </div>
+                                
                             </div>
 
                                 <div class="d-flex flex-row text-center m-auto py-5">

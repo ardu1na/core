@@ -10,15 +10,26 @@ from reportlab.pdfgen import canvas
 from inventory.models import Item, Department, Inventory, Category
 from inventory.forms import ItemForm, DepartmentForm, CategoryForm, AddItemForm
 
+def index(request):    
+    return render (request, 'index.html', {})
+
+
 def export_pdf(request, id=None):
     # Get the data to include in the PDF document
+    search_query = request.GET.get('q')
+    
     if id:
         inventory = Inventory.objects.get(id=id)
-        items = Item.objects.filter(inventory__id=inventory.id)
-        # ...
+
+        if search_query:
+            items = Item.objects.filter(inventory__id=inventory.id).filter(Q(name__icontains=search_query) | Q(category__name__icontains=search_query))
+        else:
+            items = Item.objects.filter(inventory__id=inventory.id)
     else:
-        items = Item.objects.all()
-        # ...
+        if search_query:
+            items = Item.objects.filter(Q(name__icontains=search_query) | Q(category__name__icontains=search_query))
+        else:
+            items = Item.objects.all()
 
     # Create a BytesIO object to write the PDF document to
     buffer = BytesIO()
@@ -28,8 +39,7 @@ def export_pdf(request, id=None):
 
     # Draw the content onto the PDF
     if id:
-
-        pdf.drawString(100, 750, f"{inventory} Inventory Report")
+        pdf.drawString(100, 750, f"{inventory.name} Inventory Report")
     else:
         pdf.drawString(100, 750, "All Items Report")
 
@@ -43,16 +53,11 @@ def export_pdf(request, id=None):
         b = item.updated_at
         updated_at = b.strftime("%d %b %Y %H:%M")
 
-        """ if item.category:
-            pdf.drawString(20, y, f"id: {item.id} - {item.name} - {item.category.name} - Created at: {created_at} - Last Updated: {updated_at}")
-        else:
-            pdf.drawString(120, y, f"id: {item.id} -  {item.name} - None Category  - Created at: {created_at} - Last Updated: {updated_at}")
-        y -= 20"""
-        
+       
         if item.category:
-            text = f"id: {item.id} - {item.name} - {item.category.name} - Created at: {created_at} - Last Updated: {updated_at}"
+            text = f"## id: {item.id} - {item.name} - {item.category.name} - Created at: {created_at} - Last Updated: {updated_at}"
         else:
-            text = f"id: {item.id} -  {item.name} - None Category  - Created at: {created_at} - Last Updated: {updated_at}"
+            text = f"## id: {item.id} -  {item.name} - None Category  - Created at: {created_at} - Last Updated: {updated_at}"
 
         # Split the text into lines that fit within the maximum width
         lines = []
@@ -71,8 +76,6 @@ def export_pdf(request, id=None):
             pdf.drawString(20, y, line)
             y -= 20
         
-        
-
     # Close the PDF object cleanly, and we're done.
     pdf.showPage()
     pdf.save()
@@ -81,12 +84,12 @@ def export_pdf(request, id=None):
     # present the option to save the file.
     buffer.seek(0)
     response = HttpResponse(buffer, content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename=inventory_report.pdf'
-    return response
-
-
-def index(request):    
-    return render (request, 'index.html', {})
+    if id:
+        response['Content-Disposition'] = f'attachment; filename={inventory.name.lower().replace(" ", "_")}_inventory_report.pdf'
+    else:
+            response['Content-Disposition'] = 'attachment; filename=all_items_report.pdf'
+    
+    return response 
 
 
 

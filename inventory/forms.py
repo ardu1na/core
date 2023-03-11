@@ -7,6 +7,14 @@ class CategoryForm(forms.ModelForm):
     class Meta:
         model= Category
         fields = ('name',)
+        widgets = {
+            'name' : forms.TextInput(
+                attrs={
+                    'class':"form-control",
+                    'id':"name",
+                    'placeholder':"Name",
+                    }),
+        }
         
 class AddItemForm(forms.ModelForm):
     items = forms.ModelMultipleChoiceField(

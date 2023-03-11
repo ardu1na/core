@@ -26,7 +26,7 @@ def items(request, id=None):
                 if addform.is_valid():
                     add_items = addform.cleaned_data['items']
                     inventory.items.add(*add_items) # add new items to existing related objects
-                    return redirect('deptitems', id=id)  # Use redirect instead of reverse
+                    return redirect('deptitems', id=id)  
 
                 else:
                     return HttpResponseBadRequest("Ups! something gets wrong, go back and try again please.")

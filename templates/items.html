@@ -76,14 +76,22 @@
 
     <div class="container">
         {% if items %}
-            <h1 class="my-3 text-center">Items</h1>
+            <h1 class="my-3 text-center">
+                {% if 'id'  in request.resolver_match.kwargs %}
+                {{ inventory.name }} Inventory
+                {% else %}
+                ITEMS
+                {% endif %}
+            </h1>
 
             <div class="py-1 mb-4 mx-5">
-                <form class="d-flex flex-row" action="{% url 'items' %}" method="GET">
-                    <input class="form-control"  type="text" name="q" placeholder="Search items...">
-                    <button class="btn btn-dark"  type="submit">Search</button>
+                <form class="d-flex flex-row" action="{% if 'id' in request.resolver_match.kwargs %}
+                    {% url 'deptitems' id=inventory.id %}{% else %}{% url 'items' %}{% endif %}" method="GET">
+                    <input class="form-control" type="text" name="q" placeholder="Search items...">
+                    <button class="btn btn-dark" type="submit">Search</button>
                 </form>
-            </div>  
+            </div>
+            
 
             <!-- TABLE ALL itemS -->
             <div class="py-3 px-3 my-4 text-center">
@@ -93,7 +101,11 @@
                         <th scope="col">NAME</th>
                         <th scope="col">DATE CREATED</th>
                         <th scope="col">DATE UPDATED</th>
+                        {% if 'id'  in request.resolver_match.kwargs %}
+                        {% else %}
                         <th scope="col">PRESENT IN</th>
+
+                        {% endif %}
                         <th scope="col">CATEGORY</th>
 
                         <th class="text-center"><div class="d-flex flex-row-reverse pb-4">
@@ -110,11 +122,14 @@
                                 <td><a href="{% url 'edititem' id=item.id %}">{{item.name}}</a></td>
                                 <td>{{item.created_at|date:"d/m/Y"}}</td>
                                 <td>{{item.updated_at|date:"d/m/Y"}}</td>
+                                {% if 'id'  in request.resolver_match.kwargs %}
+                                {% else %}
                                 <td>
                                     {% for inventory in item.inventory.all %}
                                         {{inventory}} /
                                     {% endfor %}    
                                 </td>
+                                {% endif %}
 
                                 <td><a href="#">{{item.category}}</a></td>
 

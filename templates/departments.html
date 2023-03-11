@@ -102,7 +102,7 @@
                             <tr>
                                 <td><a href="{% url 'editdepartment' id=department.id %}">{{department.name}}</a></td>
                                 
-                                <td><a href="#">{{department.name}} INVENTORY </a></td>
+                                <td><a href="{% url 'deptitems' id=department.inventory.id %}">{{department.name}} INVENTORY </a></td>
 
 
                                 <!-- ACTION BUTTONS -->

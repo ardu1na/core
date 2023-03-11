@@ -3,7 +3,7 @@ from  django.urls import reverse
 from django.http import HttpResponseBadRequest
 
 
-from inventory.models import Item, Department
+from inventory.models import Item, Department, Inventory
 from inventory.forms import ItemForm, DepartmentForm
 
 
@@ -14,30 +14,46 @@ def index(request):
 
 
 
-def items(request):
-    items = Item.objects.all()
-    addform=ItemForm()
-    search_query = request.GET.get('q')
+def items(request, id=None):
+    if id:
+        inventory = Inventory.objects.get(id=id)
+        items = Item.objects.filter(inventory__id=inventory.id)
+               
+        search_query = request.GET.get('q')
 
-    if search_query:
-        items = items.filter(name__icontains=search_query)
-
-    if request.method == 'GET':
-        addform = ItemForm()
-        
-    if request.method == 'POST':
-        if "additem" in request.POST:
-            addform = ItemForm(request.POST)
-            if addform.is_valid():
-                addform.save()
-                return redirect(reverse('items')+ "?added")
-            else:
-                return HttpResponseBadRequest("Ups! something gets wrong, go back and try again please.") 
-    data = {
+        if search_query:
+            items = items.filter(name__icontains=search_query)
+            
+        data = {
         'items' : items,
-        'addform' : addform,
+        'inventory' : inventory,
+        'addform':""
     }
-    return render (request, 'items.html', data)
+
+    else:
+        items = Item.objects.all()
+               
+        search_query = request.GET.get('q')
+
+        if search_query:
+            items = items.filter(name__icontains=search_query)
+
+        if request.method == 'GET':
+            addform = ItemForm()
+            
+        if request.method == 'POST':
+            if "additem" in request.POST:
+                addform = ItemForm(request.POST)
+                if addform.is_valid():
+                    addform.save()
+                    return redirect(reverse('items')+ "?added")
+                else:
+                    return HttpResponseBadRequest("Ups! something gets wrong, go back and try again please.") 
+        data = {
+            'items' : items,
+            'addform' : addform,
+        }
+    return render  (request, 'items.html', data)
 
 
 

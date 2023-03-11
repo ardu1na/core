@@ -120,7 +120,9 @@ def items(request, id=None):
         data = {
         'items' : items,
         'inventory' : inventory,
-        'addform': addform
+        'addform': addform,
+        'total_items_count': items.count(),
+
     }
 
     else:
@@ -145,6 +147,8 @@ def items(request, id=None):
         data = {
             'items' : items,
             'addform' : addform,
+            'total_items_count': items.count(),
+
         }
     return render  (request, 'items.html', data)
 

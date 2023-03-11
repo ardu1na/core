@@ -111,18 +111,26 @@
 
         
           
-                {% if 'id'  in request.resolver_match.kwargs %}
-                <h1 class="my-3 text-center">
-                    {{ inventory.name }} Inventory            </h1>
-                    <a class="btn btn-primary mb-3" href="{% url 'export_dpt_pdf' id=inventory.id %}?q={{ request.GET.q }}">Export PDF</a>
-
+        {% if 'id' in request.resolver_match.kwargs %}
+        <h1 class="my-3 text-center">{{ inventory.name }} Inventory</h1>
+        <a class="btn btn-primary mb-3" href="{% url 'export_dpt_pdf' id=inventory.id %}?q={{ request.GET.q }}">
+            {% if request.GET.q %}
+                Export search results as PDF
+            {% else %}
+                Export PDF Report
+            {% endif %}
+        </a>
+        {% else %}
+            <h1 class="my-3 text-center">ITEMS</h1>
+            <a class="btn btn-primary mb-3" href="{% url 'export_pdf' %}?q={{ request.GET.q }}">
+                {% if request.GET.q %}
+                    Export search results as PDF
                 {% else %}
-                <h1 class="my-3 text-center">
-                    ITEMS
-                </h1>
-                <a class="btn btn-primary mb-3" href="{% url 'export_pdf' %}?q={{ request.GET.q }}">Export PDF</a>
-
+                    Export PDF
                 {% endif %}
+            </a>
+        {% endif %}
+    
 
             <div class="py-1 mb-4 mx-5">
                 <form class="d-flex flex-row" action="{% if 'id' in request.resolver_match.kwargs %}

@@ -13,23 +13,26 @@ from inventory.forms import ItemForm, DepartmentForm, CategoryForm, AddItemForm
 def index(request):    
     return render (request, 'index.html', {})
 
-
 def export_pdf(request, id=None):
     # Get the data to include in the PDF document
     search_query = request.GET.get('q')
-    
+
     if id:
         inventory = Inventory.objects.get(id=id)
 
         if search_query:
             items = Item.objects.filter(inventory__id=inventory.id).filter(Q(name__icontains=search_query) | Q(category__name__icontains=search_query))
+            filename = f'{inventory.name.lower().replace(" ", "_")}_inventory_search_{search_query.lower().replace(" ", "_")}_report.pdf'
         else:
             items = Item.objects.filter(inventory__id=inventory.id)
+            filename = f'{inventory.name.lower().replace(" ", "_")}_inventory_report.pdf'
     else:
         if search_query:
             items = Item.objects.filter(Q(name__icontains=search_query) | Q(category__name__icontains=search_query))
+            filename = f'all_items_search_{search_query.lower().replace(" ", "_")}_report.pdf'
         else:
             items = Item.objects.all()
+            filename = 'all_items_report.pdf'
 
     # Create a BytesIO object to write the PDF document to
     buffer = BytesIO()
@@ -84,12 +87,10 @@ def export_pdf(request, id=None):
     # present the option to save the file.
     buffer.seek(0)
     response = HttpResponse(buffer, content_type='application/pdf')
-    if id:
-        response['Content-Disposition'] = f'attachment; filename={inventory.name.lower().replace(" ", "_")}_inventory_report.pdf'
-    else:
-            response['Content-Disposition'] = 'attachment; filename=all_items_report.pdf'
+    response['Content-Disposition'] = f'attachment; filename={filename}'
     
-    return response 
+    return response
+
 
 
 

@@ -27,16 +27,51 @@ def export_pdf(request, id=None):
     pdf = canvas.Canvas(buffer)
 
     # Draw the content onto the PDF
-    pdf.drawString(100, 750, "Inventory Report")
+    if id:
+
+        pdf.drawString(100, 750, f"{inventory} Inventory Report")
+    else:
+        pdf.drawString(100, 750, "All Items Report")
+
     pdf.drawString(100, 700, "Items:")
+    max_width = 400
 
     y = 650
     for item in items:
-        if item.category:
-            pdf.drawString(120, y, f"{item.name} - {item.category.name}")
+        a = item.created_at
+        created_at = a.strftime("%d %b %Y %H:%M")
+        b = item.updated_at
+        updated_at = b.strftime("%d %b %Y %H:%M")
+
+        """ if item.category:
+            pdf.drawString(20, y, f"id: {item.id} - {item.name} - {item.category.name} - Created at: {created_at} - Last Updated: {updated_at}")
         else:
-            pdf.drawString(120, y, f"{item.name} - None Category")
-        y -= 20
+            pdf.drawString(120, y, f"id: {item.id} -  {item.name} - None Category  - Created at: {created_at} - Last Updated: {updated_at}")
+        y -= 20"""
+        
+        if item.category:
+            text = f"id: {item.id} - {item.name} - {item.category.name} - Created at: {created_at} - Last Updated: {updated_at}"
+        else:
+            text = f"id: {item.id} -  {item.name} - None Category  - Created at: {created_at} - Last Updated: {updated_at}"
+
+        # Split the text into lines that fit within the maximum width
+        lines = []
+        line = ''
+        for word in text.split():
+            if pdf.stringWidth(line + ' ' + word) <= max_width:
+                line += ' ' + word if line else word
+            else:
+                lines.append(line)
+                line = word
+        if line:
+            lines.append(line)
+
+        # Draw each line of the text block on the PDF
+        for line in lines:
+            pdf.drawString(20, y, line)
+            y -= 20
+        
+        
 
     # Close the PDF object cleanly, and we're done.
     pdf.showPage()

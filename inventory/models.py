@@ -18,31 +18,10 @@ class Department (models.Model):
 
 
 
-class Inventory (models.Model):
-    name = models.CharField(
-                            max_length=100,
-                            editable=False              # we auto create each department inventory 
-                            )
-    department = models.OneToOneField(
-                            Department,                 # one department could have one inventory
-                            
-                            on_delete=models.CASCADE,   # if department is deleted, delete its inventory
-                            ) 
-        
-    def __str__ (self): # Define what to show when the inventory is called in a template without fields
-         return f"{self.name} Dept." # ex: if name is "science" it'll return "Science department inventory"
-
-    class Meta:
-        verbose_name_plural = "inventory lists" # Define the plural name show in admin panel
-        
-    
-
-
-
-
 class Category (models.Model):
     name = models.CharField(max_length=100,
-                            unique=True)    # can't name a new category as previous categories 
+                            unique=True)    # can't name a new category as previous categories
+     
     def __str__ (self):                    
         return self.name  # Define what to show when the category is called in a template without fields
     class Meta:
@@ -53,9 +32,30 @@ class Category (models.Model):
 
 
 
+class Inventory (models.Model):
+    name = models.CharField(
+                            max_length=100,
+                            editable=False              # we auto create each department inventory 
+                            )
+    department = models.OneToOneField(
+                            Department,                 # one department could have one inventory
+                            
+                            on_delete=models.CASCADE,   # if department is deleted, delete its inventory
+                            ) 
+    item_count = models.PositiveIntegerField(default=0) # How many items it has
+    
+    def __str__ (self): # Define what to show when the inventory is called in a template without fields
+         return f"{self.name} Dept." # ex: if name is "science" it'll return "Science department inventory"
+
+    class Meta:
+        verbose_name_plural = "inventory lists" # Define the plural name show in admin panel  
+
+
 class Item (models.Model):
     name = models.CharField(max_length=100,
                             unique=True)                # can't name a new item as any of previous items
+    
+    amount = models.PositiveIntegerField(default=1)
     
     created_at = models.DateTimeField(auto_now_add=True)          # Automatically set the field to now when the item is first created.
     updated_at = models.DateTimeField(auto_now=True)              # Automatically set the field to now every time the item is saved.
@@ -79,4 +79,7 @@ class Item (models.Model):
     def __str__ (self): # Define what to show when the item is called in a template without fields 
         return self.name
     
+    
+    
+
     

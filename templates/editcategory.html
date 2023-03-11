@@ -1,6 +1,20 @@
 {% extends 'layout/base.html' %}
 {% block 'title' %} Change {{category}} {% endblock %}
 
+
+
+
+
+{% block breadcrumbs %}
+  {{ block.super }}
+
+        <li class="breadcrumb-item"><a  class="text-white" href="{% url 'items' %}">All Items  </a></li>
+        <li class="breadcrumb-item"><a class="text-white" ">{{category}}</a></li>
+{% endblock %}
+
+
+
+
 {% block 'content' %}
 
     

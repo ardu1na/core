@@ -1,6 +1,16 @@
 {% extends 'layout/base.html' %}
 {% block 'title' %} Change {{editdepartment.name}} {% endblock %}
 
+
+
+{% block breadcrumbs %}
+  {{ block.super }}
+
+        <li class="breadcrumb-item"><a  class="text-white" href="{% url 'departments' %}">All Departments  </a></li>
+        <li class="breadcrumb-item"><a  class="text-white">{{editdepartment.name}}</a></li>
+{% endblock %}
+
+
 {% block 'content' %}
 
     

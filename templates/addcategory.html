@@ -4,6 +4,13 @@
 {% block 'content' %}
 
     
+{% block breadcrumbs %}
+{{ block.super }}
+
+      <li class="breadcrumb-item"><a  class="text-white" href="{% url 'items' %}">All Items  </a></li>
+      <li class="breadcrumb-item"><a  class="text-white">New Category</a></li>
+{% endblock %}
+
 
     <div class="container py-3 ">
         <div class="row">          

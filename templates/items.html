@@ -159,15 +159,35 @@
             </div>     <!-- END TABLE ALL itemS -->
 
 
-        {% else %}
-            <div class="col-12 d-flex flex-row justify-content-around pb-4">
-                <h3> No items yet ... </h3>
+            {% elif 'q' in request.GET %}
+            <div class="col-12 d-flex flex-row justify-content-around py-4">
 
-                <button type="button" class="btn btn-light fs-4 shadow-l px-4" data-bs-toggle="modal" data-bs-target="#addItem">
-                    <i class="fa-solid fa-plus me-2"></i> <strong>Add some</strong>
-                </button>
+                <h5> No items matching... </h5>
+
+                <div class="py-1 mb-4 mx-5">
+                    <form class="d-flex flex-row" action="{% if 'id' in request.resolver_match.kwargs %}
+                    {% url 'deptitems' id=inventory.id %}{% else %}{% url 'items' %}{% endif %}" method="GET">
+                    <input class="form-control" type="text" name="q" placeholder="Search items...">
+                    <button class="btn btn-dark" type="submit">Search</button>
+                </form>
+                </div>  
             </div> 
+            <div class="py-1 mb-4 mx-5">
 
+                <a href="./" class="btn fs-7 mx-2">
+                    <i class="fa-solid fa-arrow-left me-2 fs-7"></i> Return
+                </a>
+            </div>  
+
+
+        {% else %}
+        <div class="col-12 d-flex flex-row justify-content-around pb-4">
+            <h3> No items yet... </h3>
+
+            <button type="button" class="btn btn-light fs-4 shadow-l px-4" data-bs-toggle="modal" data-bs-target="#addItem">
+                <i class="fa-solid fa-plus me-2"></i> <strong>Add some</strong>
+            </button>
+        </div> 
         {% endif %}      
     </div>    
 {% endblock %}

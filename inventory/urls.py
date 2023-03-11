@@ -4,6 +4,10 @@ from inventory import views
 urlpatterns = [
     
     
+    path('items/<int:id>/export/pdf/', login_required(views.export_pdf), name='export_dpt_pdf'),
+    path('items/export/pdf/', login_required(views.export_pdf), name='export_pdf'),
+
+    
     path('', login_required(views.index), name='index'),
     path('items/', login_required(views.items), name='items'),
     path('items/<int:id>/', login_required(views.items), name='deptitems'),

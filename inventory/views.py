@@ -1,11 +1,53 @@
+from io import BytesIO
+
 from django.shortcuts import render, redirect
 from  django.urls import reverse
 from django.http import HttpResponseBadRequest
 from django.db.models import Q
-
+from django.http import HttpResponse
+from reportlab.pdfgen import canvas
 
 from inventory.models import Item, Department, Inventory, Category
 from inventory.forms import ItemForm, DepartmentForm, CategoryForm, AddItemForm
+
+def export_pdf(request, id=None):
+    # Get the data to include in the PDF document
+    if id:
+        inventory = Inventory.objects.get(id=id)
+        items = Item.objects.filter(inventory__id=inventory.id)
+        # ...
+    else:
+        items = Item.objects.all()
+        # ...
+
+    # Create a BytesIO object to write the PDF document to
+    buffer = BytesIO()
+
+    # Create the PDF object, using the BytesIO object as its "file."
+    pdf = canvas.Canvas(buffer)
+
+    # Draw the content onto the PDF
+    pdf.drawString(100, 750, "Inventory Report")
+    pdf.drawString(100, 700, "Items:")
+
+    y = 650
+    for item in items:
+        if item.category:
+            pdf.drawString(120, y, f"{item.name} - {item.category.name}")
+        else:
+            pdf.drawString(120, y, f"{item.name} - None Category")
+        y -= 20
+
+    # Close the PDF object cleanly, and we're done.
+    pdf.showPage()
+    pdf.save()
+
+    # FileResponse sets the Content-Disposition header so that browsers
+    # present the option to save the file.
+    buffer.seek(0)
+    response = HttpResponse(buffer, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename=inventory_report.pdf'
+    return response
 
 
 def index(request):    

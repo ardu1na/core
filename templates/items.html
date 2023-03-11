@@ -108,13 +108,20 @@
 
     <div class="container">
         {% if items %}
-            <h1 class="my-3 text-center">
+
+          
                 {% if 'id'  in request.resolver_match.kwargs %}
-                {{ inventory.name }} Inventory
+                <h1 class="my-3 text-center">
+                    {{ inventory.name }} Inventory            </h1>
+                    <a class="btn btn-primary mb-3" href="{% url 'export_dpt_pdf' id=inventory.id %}">Export PDF</a>
+
                 {% else %}
-                ITEMS
+                <h1 class="my-3 text-center">
+                    ITEMS
+                </h1>
+                <a class="btn btn-primary mb-3" href="{% url 'export_pdf' %}">Export PDF</a>
+
                 {% endif %}
-            </h1>
 
             <div class="py-1 mb-4 mx-5">
                 <form class="d-flex flex-row" action="{% if 'id' in request.resolver_match.kwargs %}

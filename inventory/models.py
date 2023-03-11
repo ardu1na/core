@@ -71,8 +71,8 @@ class Item (models.Model):
     category = models.ForeignKey(                           # one category has many items but one item just has one category
                                 Category,                   
                                 on_delete=models.SET_NULL,  # if category is deleted, set category null
-                                null= True, blank= True,    # non required field
-                                related_name="items")       # how to call all items from a category
+                                null= True, blank= False,    # non required field
+                                related_name="items", default=None)       # how to call all items from a category
                                                             # ex: category.items return all items of a desired category 
      
      

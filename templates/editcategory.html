@@ -1,16 +1,8 @@
 {% extends 'layout/base.html' %}
-{% block 'title' %} Change {{edititem.name}} {% endblock %}
+{% block 'title' %} Change {{category}} {% endblock %}
 
 {% block 'content' %}
-<!-- new category ALERT -->
-<div class="my-2">
-    {% if 'newcategory' in request.GET %}
-    <div class="alert alert-success alert-dismissible fade show mx-5" role="alert">
-        ☑ Category added successfully!
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    {% endif %}
-</div>
+
     
 
     <div class="container py-3 ">
@@ -18,7 +10,7 @@
             <div class="col-xl-10 m-auto">
                 <div class="card">
                     <div class="card-body p-4">
-                        <h2 class="my-3  pb-5">Change item: {{edititem.name}} </h2>
+                        <h2 class="my-3  pb-5">Change category: {{category}}</h2>
                         <hr>
 
                         <!--- EDIT  ITEM FORM -->
@@ -30,19 +22,11 @@
                                 <div class="form-group mb-5 d-flex flex-row">
                                     {{editform.name}}
                                 </div>
-                                <p class="fs-5 mx-4">
-                                    Category 
-                                </p>
-                                <div class=" my-3 d-flex flex-row m-auto ">
-
-                                    <div><a href="{% url 'addcategory' id=edititem.id %}" class="btn btn-outline-primary"><i class="fs-5 fa-solid fa-plus"></i></a></div>
-
-                                      {{editform.category}}                        
-                                </div>
+                                
                             </div>
 
                                 <div class="d-flex flex-row text-center m-auto py-5">
-                                    <button type="submit" class="btn btn-primary px-3 fs-3" name="edititem">
+                                    <button type="submit" class="btn btn-primary px-3 fs-3" name="changecategory">
                                     <i class="fa-solid fa-check me-2"></i> Submit</button>
                                 </div>
                         </form>

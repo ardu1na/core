@@ -11,6 +11,7 @@ urlpatterns = [
     path('edititem/<int:id>/', views.edititem, name="edititem"),
 
     path('category/add/<int:id>/', views.addcategory, name="addcategory"),
+    path('category/edit/<int:id>/', views.editcategory, name="editcategory"), 
 
 
     path('departments/', login_required(views.departments), name='departments'),

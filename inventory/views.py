@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from  django.urls import reverse
 from django.http import HttpResponseBadRequest
+from django.db.models import Q
 
 
 from inventory.models import Item, Department, Inventory, Category
@@ -20,7 +21,7 @@ def items(request, id=None):
         search_query = request.GET.get('q')
 
         if search_query:
-            items = items.filter(name__icontains=search_query)
+            items = items.filter(Q(name__icontains=search_query) | Q(category__name__icontains=search_query))
             
         data = {
         'items' : items,
@@ -34,7 +35,7 @@ def items(request, id=None):
         search_query = request.GET.get('q')
 
         if search_query:
-            items = items.filter(name__icontains=search_query)
+            items = items.filter(Q(name__icontains=search_query) | Q(category__name__icontains=search_query))
 
         if request.method == 'GET':
             addform = ItemForm()
@@ -103,7 +104,25 @@ def addcategory(request, id):
             }
     return render (request, 'addcategory.html', data)
 
+def editcategory(request, id):
+    category = Category.objects.get(id=id)
 
+    if request.method == "GET":
+        editform = CategoryForm(instance=category)
+        data = {
+            'editform': editform,
+            'category': category,
+            'id': id,
+            }
+        return render (request, 'editcategory.html', data)
+
+    if request.method == 'POST':
+        editform = CategoryForm(request.POST, instance=category)
+        if editform.is_valid():
+            editform.save()
+            return redirect(reverse('items')+ "?changed")
+        else:
+            return HttpResponseBadRequest("Ups! something gets wrong, go back and try again please.")
 
 
 

@@ -87,7 +87,7 @@
             <div class="py-1 mb-4 mx-5">
                 <form class="d-flex flex-row" action="{% if 'id' in request.resolver_match.kwargs %}
                     {% url 'deptitems' id=inventory.id %}{% else %}{% url 'items' %}{% endif %}" method="GET">
-                    <input class="form-control" type="text" name="q" placeholder="Search items...">
+                    <input class="form-control" type="text" name="q" placeholder="Search items or categories...">
                     <button class="btn btn-dark" type="submit">Search</button>
                 </form>
             </div>
@@ -131,7 +131,7 @@
                                 </td>
                                 {% endif %}
 
-                                <td><a href="#">{{item.category}}</a></td>
+                                <td><a href="{% url 'editcategory' id=item.category.id %}">{{item.category}}</a></td>
 
                                 <!-- ACTION BUTTONS -->
                                 <td class="text-center borderless align-content-end">
@@ -167,7 +167,7 @@
                 <div class="py-1 mb-4 mx-5">
                     <form class="d-flex flex-row" action="{% if 'id' in request.resolver_match.kwargs %}
                     {% url 'deptitems' id=inventory.id %}{% else %}{% url 'items' %}{% endif %}" method="GET">
-                    <input class="form-control" type="text" name="q" placeholder="Search items...">
+                    <input class="form-control" type="text" name="q" placeholder="Search items or categories...">
                     <button class="btn btn-dark" type="submit">Search</button>
                 </form>
                 </div>  

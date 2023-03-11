@@ -21,14 +21,13 @@ def items(request, id=None):
             addform = AddItemForm()
 
         if request.method == 'POST':
-            if "additem" in request.POST:
+            if "additems" in request.POST:
                 addform = AddItemForm(request.POST)
                 if addform.is_valid():
                     add_items = addform.cleaned_data['items']
-                    for item in add_items:
-                        item.inventory = inventory
-                        item.save()
-                    return redirect(reverse('items', args=[id]) + "?added")
+                    inventory.items.add(*add_items) # add new items to existing related objects
+                    return redirect('deptitems', id=id)  # Use redirect instead of reverse
+
                 else:
                     return HttpResponseBadRequest("Ups! something gets wrong, go back and try again please.")
 

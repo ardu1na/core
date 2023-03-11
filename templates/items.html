@@ -10,7 +10,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="addItemLabel">Add a new Item</h1>
+                <h1 class="modal-title fs-5" id="addItemLabel">Add Items</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
         
@@ -19,19 +19,12 @@
                 {% csrf_token %}
                 <div class="modal-body">
                     <div class="form-group mb-5 d-flex flex-row">
-                        {{addform.name}}
-                    </div>
-                    <div class="fs-5">
-                        Category 
-                    </div>
-                    <div class=" my-3 d-flex flex-row m-auto">
-                        <div class="col-11">   {{addform.category}}                             </div>
-                        <div><a href="{% url 'addnewcategory' %}" class="btn btn-outline-primary"><i class="fs-5 fa-solid fa-plus"></i></a></div>
+                        {{addform.items}}
                     </div>
                 </div>
                 <div class="modal-footer">
                     <div class="d-flex text-center">
-                        <button type="submit" class="btn btn-primary px-3" name="additem">
+                        <button type="submit" class="btn btn-primary px-3" name="additems">
                         <i class="fa-solid fa-check me-2"></i> Submit</button>
                     </div>
                 </div>

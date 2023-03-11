@@ -122,58 +122,70 @@
     <div class="container">
         {% if items %}
 
-        
-          
-        {% if 'id' in request.resolver_match.kwargs %}
-        <h1 class="my-3 text-center">{{ inventory.name }} Inventory</h1>
-        <a class="btn btn-primary mb-3" href="{% url 'export_dpt_pdf' id=inventory.id %}?q={{ request.GET.q }}">
-            {% if request.GET.q %}
-                Export search results as PDF
+            {% if 'id' in request.resolver_match.kwargs %}
+                <div class="d-flex flex-row-reverse">  
+                    
+                    <a class="btn btn-primary mb-3 mx-4 fs-5 shadow-lg" href="{% url 'export_dpt_pdf' id=inventory.id %}?q={{ request.GET.q }}">
+                        {% if request.GET.q %}
+                            Export search results as PDF
+                        {% else %}
+                            Export PDF Report
+                        {% endif %}
+                    </a>
+
+                    <h4 class="mx-4">TOTAL : {{total_items_count}} {% if total_items_count == 1 %}item {% else %}items {% endif %}</h4>
+
+                </div>
+                <h1 class="my-4 text-center">{{ inventory.name }} Inventory</h1>
             {% else %}
-                Export PDF Report
+                <div class="d-flex flex-row-reverse">  
+                    <a class="btn btn-primary mb-3 mx-4 fs-5 shadow-lg" href="{% url 'export_pdf' %}?q={{ request.GET.q }}">
+                    {% if request.GET.q %}
+                        Export search results as PDF
+                    {% else %}
+                        Export PDF
+                    {% endif %}
+                    </a>
+                    <h4 class="mx-4">TOTAL : {{total_items_count}} {% if total_items_count == 1 %}item {% else %}items {% endif %}</h4>
+
+                </div>
+                <h1 class="mb-5 mt-4 text-center">ITEMS</h1>
+
             {% endif %}
-        </a>
-        {% else %}
-            <h1 class="my-3 text-center">ITEMS</h1>
-            <a class="btn btn-primary mb-3" href="{% url 'export_pdf' %}?q={{ request.GET.q }}">
-                {% if request.GET.q %}
-                    Export search results as PDF
-                {% else %}
-                    Export PDF
-                {% endif %}
-            </a>
-        {% endif %}
+
     
 
             <div class="py-1 mb-4 mx-5">
                 <form class="d-flex flex-row" action="{% if 'id' in request.resolver_match.kwargs %}
                     {% url 'deptitems' id=inventory.id %}{% else %}{% url 'items' %}{% endif %}" method="GET">
-                    <input class="form-control" type="text" name="q" placeholder="Search items or categories...">
-                    <button class="btn btn-dark" type="submit">Search</button>
+                    <input class="form-control shadow" type="text" name="q" placeholder="Search items or categories...">
+                    <button class="btn btn-dark shadow" type="submit">Search</button>
                 </form>
             </div>
             
-            <h5>{{total_items_count}} {% if total_items_count == 1 %}item {% else %}items {% endif %}</h5>
+            <div class="d-flex flex-row-reverse pb-4 mx-4">
+                <button type="button" class="btn btn-light fs-4 shadow-l" data-bs-toggle="modal" data-bs-target="#addItem">
+                    <i class="fa-solid fa-plus me-2"></i> <strong>Add new Item</strong>
+                </button>
+            </div> 
+
+
             <!-- TABLE ALL itemS -->
             <div class="py-3 px-3 my-4 text-center">
-                <table class="table table-responsive align-middle table-hover rounded">
-                    <thead>
-                    <tr>
-                        <th scope="col">NAME</th>
-                        <th scope="col">DATE CREATED</th>
-                        <th scope="col">DATE UPDATED</th>
+                <table class="table table-responsive align-middle table-bordered table-hover rounded-lg bg-white shadow-lg py-5">
+                    <thead >
+                    <tr >
+                        <th scope="col" class=" py-4">NAME</th>
+                        <th scope="col"  class="py-4">DATE CREATED</th>
+                        <th scope="col" class=" py-4">DATE UPDATED</th>
                         {% if 'id'  in request.resolver_match.kwargs %}
                         {% else %}
-                        <th scope="col">PRESENT IN</th>
+                        <th scope="col" class=" py-4">PRESENT IN</th>
 
                         {% endif %}
-                        <th scope="col">CATEGORY</th>
+                        <th scope="col" class=" py-4">CATEGORY</th>
 
-                        <th class="text-center"><div class="d-flex flex-row-reverse pb-4">
-                            <button type="button" class="btn btn-light fs-5 shadow-l" data-bs-toggle="modal" data-bs-target="#addItem">
-                                <i class="fa-solid fa-plus me-2"></i> <strong>Add new</strong>
-                            </button>
-                        </div>  </th>
+                        <th class="text-center py-4"> </th>
                     </tr>
                     </thead>
 

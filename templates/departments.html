@@ -83,25 +83,27 @@
 
             <div class="py-1 mb-4 mx-5">
                 <form class="d-flex flex-row" action="{% url 'departments' %}" method="GET">
-                    <input class="form-control"  type="text" name="q" placeholder="Search departments...">
-                    <button class="btn btn-dark"  type="submit">Search</button>
+                    <input class="form-control shadow"  type="text" name="q" placeholder="Search departments...">
+                    <button class="btn btn-dark shadow"  type="submit">Search</button>
                 </form>
             </div>  
 
+            <div class="d-flex flex-row-reverse pb-1 mx-4">
+                <button type="button" class="btn btn-light fs-5 shadow-l" data-bs-toggle="modal" data-bs-target="#addDepartment">
+                    <i class="fa-solid fa-plus me-2"></i> <strong>Add new</strong>
+                </button>
+            </div>
+
             <!-- TABLE ALL departmentS -->
             <div class="py-3 px-3 my-4 text-center">
-                <table class="table table-responsive align-middle table-hover rounded">
+                <table class="table table-responsive table-bordered align-middle table-hover rounded-lg bg-white shadow-lg">
                     <thead>
                     <tr>
-                        <th scope="col">DEPT.</th>
-                        <th scope="col">ITEMS</th>
+                        <th scope="col" class=" py-4">DEPT.</th>
+                        <th scope="col" class="py-4">ITEMS</th>
 
-                        <th class="text-center">
-                            <div class="d-flex flex-row-reverse pb-4">
-                                <button type="button" class="btn btn-light fs-5 shadow-l" data-bs-toggle="modal" data-bs-target="#addDepartment">
-                                    <i class="fa-solid fa-plus me-2"></i> <strong>Add new</strong>
-                                </button>
-                            </div>
+                        <th class="text-center  py-4">
+                            
                         </th>
                     </tr>
                     </thead>

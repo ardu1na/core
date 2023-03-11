@@ -14,15 +14,17 @@
         {% endblock %}
     </head>
 
-    <body>   
+    <body class="bg-dark">   
     {% block 'body' %}
         {% include 'layout/includes/header.html' %} <!-- inlcude header in everypage -->
         
         <!-- #main -->
+        <div class="bg-light py-5">
             {% block 'content' %}
+
             {% endblock %}
         <!-- End #main -->
-
+        </div>
 
         {% block 'scripts' %}
             <!-- ICONS CDN -->

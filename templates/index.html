@@ -3,13 +3,21 @@
 
 {% block 'content' %}
 
+<div class="container">
+    <div class="row">
+        <div class="col-12 d-flex align-items-center justify-content-center">
+            <div class="card w-50 my-4 p-5">
+                <div class="card-body">
+                    <h5 class="card-title text-center py-3">Welcome to Inventory System</h5>
+                    <p class="card-text text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <div class="d-flex justify-content-center py-3">
+                        <a href="{% url 'items' %}" class="btn btn-secondary mx-2 fs-2 px-5 py-3">Items</a>
+                        <a href="{% url 'departments' %}" class="btn btn-secondary mx-2 fs-2 px-5 py-3">Departments</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-
-<div class="container py-5">
-    <h3>INDEX</h3>
-
-
-
-
-</div>    
 {% endblock %}

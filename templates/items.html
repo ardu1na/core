@@ -174,7 +174,7 @@
                                 {% else %}
                                 <td>
                                     {% for inventory in item.inventory.all %}
-                                       <a href="{% url 'editdepartment' id=inventory.department.id %}"> {{inventory}} </a> /
+                                       <a href="{% url 'deptitems' id=inventory.department.id %}"> {{inventory}} </a> /
                                     {% endfor %}    
                                 </td>
                                 {% endif %}

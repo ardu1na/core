@@ -6,8 +6,8 @@
 {% block breadcrumbs %}
   {{ block.super }}
 
-        <li class="breadcrumb-item"><a  class="text-white" href="{% url 'inventories' %}">All Inventories  </a></li>
-        <li class="breadcrumb-item"><a  class="text-white">{{editinventory.name}}</a></li>
+        <li class="breadcrumb-item"><a  class="text-white" href="{% url 'inventories' %}">Inventories  </a></li>
+        <li class="breadcrumb-item"><a  class="text-white">{{editinventory.department}}</a></li>
 {% endblock %}
 
 
@@ -39,6 +39,7 @@
                     <div class="form-group mb-5 d-flex flex-row">
                         {{addform.amount}}
                     </div>
+                   
                     {{ addform.inventory }} 
                 </div>
                 <div class="modal-footer">
@@ -60,7 +61,10 @@
                     <div class="card-body p-4">
                         <h2 class="my-3  pb-5">Change inventory {{editinventory.id}} - {{editinventory.department}} </h2>
                         <hr>
-
+                        {% if error_message %}
+                        <p class="my-5 mx-3 text-danger">{{ error_message }}</p>
+                        {% endif %}
+    
                         <!--- EDIT  Inventory FORM -->
                         <form  method="post">
                             {% csrf_token %}
@@ -86,7 +90,9 @@
                         </div> 
                     </div>
                 </div>
-
+                <a href="{% url 'inventories' %}" class="btn fs-7 mx-2 my-5">
+                    <i class="fa-solid fa-arrow-left me-2 fs-7"></i> Go back
+                </a>
         </div>
     </div>
 

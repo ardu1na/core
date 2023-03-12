@@ -5,6 +5,8 @@ from  django.urls import reverse
 from django.http import HttpResponseBadRequest
 from django.db.models import Q
 from django.http import HttpResponse
+from django.db import IntegrityError
+
 from reportlab.pdfgen import canvas
 
 from inventory.models import Item, Inventory, Category, ItemInventory
@@ -282,14 +284,13 @@ def editinventory(request, id):
 
     if request.method == "GET":
         editform = InventoryForm(instance=editinventory)
-        
         addform = ItemInventoryForm(initial={'inventory': editinventory})
         data = {
             'addform' : addform,
             'editform': editform,
             'editinventory': editinventory,
             'id': id,
-            }
+        }
         return render (request, 'editinventory.html', data)
 
     if request.method == 'POST':
@@ -299,16 +300,30 @@ def editinventory(request, id):
 
         if "additems" in request.POST:
             addform = ItemInventoryForm(request.POST, initial={'inventory': editinventory})
-            if addform.is_valid():
-                addform.save()
+            try:
+                if addform.is_valid():
+                    addform.save()
+                else:
+                    raise IntegrityError("Invalid form")
+            except IntegrityError:
+                error_message = "ATENTION: There are not enough quantity of this item available!! Try to add less."
                 data = {
                     'addform': addform,
                     'editform': editform,
                     'editinventory': editinventory,
                     'id': id,
+                    'error_message': error_message,
                 }
                 return render(request, 'editinventory.html', data)
-            
+
+            data = {
+                'addform': ItemInventoryForm(initial={'inventory': editinventory}),
+                'editform': InventoryForm(instance=editinventory),
+                'editinventory': editinventory,
+                'id': id,
+            }
+            return render(request, 'editinventory.html', data)
+
         editform = InventoryForm(request.POST, instance=editinventory)
         if editform.is_valid():
             editform.save()

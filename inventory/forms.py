@@ -44,13 +44,19 @@ class ItemForm(forms.ModelForm):
                     required=False)
     class Meta:
         model = Item
-        fields = ('name', 'category',)
+        fields = ('name', 'category', 'total')
         widgets = {
             'name' : forms.TextInput(
                 attrs={
                     'class':"form-control",
                     'id':"name",
                     'placeholder':"Name",
+                    }),
+            'total' : forms.TextInput(
+                attrs={
+                    'class':"form-control",
+                    'id':"total",
+                    'placeholder':"Quantity",
                     }),
         }
 

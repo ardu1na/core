@@ -1,8 +1,6 @@
 {% extends 'layout/base.html' %}
 {% block 'title' %} Add Category {% endblock %}
 
-{% block 'content' %}
-
     
 {% block breadcrumbs %}
 {{ block.super }}
@@ -10,6 +8,8 @@
       <li class="breadcrumb-item"><a  class="text-white" href="{% url 'items' %}">All Items  </a></li>
       <li class="breadcrumb-item"><a  class="text-white">New Category</a></li>
 {% endblock %}
+{% block 'content' %}
+
 
 
     <div class="container py-3 ">

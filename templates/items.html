@@ -34,6 +34,9 @@
                     <div class="form-group mb-5 d-flex flex-row">
                         {{addform.items}}
                     </div>
+                    <div class="form-group mb-5 d-flex flex-row">
+                        {{addform.total}}
+                    </div>
                     
                 </div>
                 <div class="modal-footer">
@@ -181,6 +184,8 @@
                         {% if 'id'  in request.resolver_match.kwargs %}
                         {% else %}
                         <th scope="col" class=" py-4">PRESENT IN</th>
+                        <th scope="col" class=" py-4">TOTAL</th>
+                        <th scope="col" class=" py-4">AVAILABLE</th>
 
                         {% endif %}
                         <th scope="col" class=" py-4">CATEGORY</th>
@@ -196,12 +201,16 @@
                                 <td>{{item.created_at|date:"d/m/Y"}}</td>
                                 <td>{{item.updated_at|date:"d/m/Y"}}</td>
                                 {% if 'id'  in request.resolver_match.kwargs %}
+                                
                                 {% else %}
                                 <td>
+
                                     {% for inventory in item.inventories.all %}
                                        <a href="{% url 'deptitems' id=inventory.id %}"> {{inventory}} </a> /
                                     {% endfor %}    
                                 </td>
+                                <td>{{item.total}}</td>
+                                <td>{{item.available}}</td>
                                 {% endif %}
                                 {% if item.category %}
                                 <td><a href="{% url 'editcategory' id=item.category.id %}">{{item.category}}</a></td>

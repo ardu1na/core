@@ -198,8 +198,8 @@
                                 {% if 'id'  in request.resolver_match.kwargs %}
                                 {% else %}
                                 <td>
-                                    {% for inventory in item.inventory.all %}
-                                       <a href="{% url 'deptitems' id=inventory.department.id %}"> {{inventory}} </a> /
+                                    {% for inventory in item.inventories.all %}
+                                       <a href="{% url 'deptitems' id=inventory.id %}"> {{inventory}} </a> /
                                     {% endfor %}    
                                 </td>
                                 {% endif %}

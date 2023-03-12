@@ -7,8 +7,8 @@ from django.db.models import Q
 from django.http import HttpResponse
 from reportlab.pdfgen import canvas
 
-from inventory.models import Item, Department, Inventory, Category
-from inventory.forms import ItemForm, DepartmentForm, CategoryForm, AddItemForm
+from inventory.models import Item, Inventory, Category
+from inventory.forms import ItemForm, InventoryForm, CategoryForm, AddItemForm
 
 def index(request):    
     return render (request, 'index.html', {})
@@ -239,19 +239,19 @@ def editcategory(request, id):
 
 
 def departments(request):
-    departments = Department.objects.all()
-    addform=DepartmentForm()
+    departments = Inventory.objects.all()
+    addform=InventoryForm()
     search_query = request.GET.get('q')
 
     if search_query:
         departments = departments.filter(name__icontains=search_query)
 
     if request.method == 'GET':
-        addform = DepartmentForm()
+        addform = InventoryForm()
         
     if request.method == 'POST':
         if "adddepartment" in request.POST:
-            addform = DepartmentForm(request.POST)
+            addform = InventoryForm(request.POST)
             if addform.is_valid():
                 addform.save()
                 return redirect(reverse('departments')+ "?added")
@@ -266,17 +266,17 @@ def departments(request):
 
 
 def deletedepartment(request, id):
-    department = Department.objects.get(id=id)
+    department = Inventory.objects.get(id=id)
     department.delete()
     return redirect(reverse('departments')+ "?deleted")
 
 
 
 def editdepartment(request, id):
-    editdepartment = Department.objects.get(id=id)
+    editdepartment = Inventory.objects.get(id=id)
 
     if request.method == "GET":
-        editform = DepartmentForm(instance=editdepartment)
+        editform = InventoryForm(instance=editdepartment)
         data = {
             'editform': editform,
             'editdepartment': editdepartment,
@@ -285,7 +285,7 @@ def editdepartment(request, id):
         return render (request, 'editdepartment.html', data)
 
     if request.method == 'POST':
-        editform = DepartmentForm(request.POST, instance=editdepartment)
+        editform = InventoryForm(request.POST, instance=editdepartment)
         if editform.is_valid():
             editform.save()
             return redirect(reverse('departments')+ "?changed")

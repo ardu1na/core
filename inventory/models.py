@@ -1,85 +1,62 @@
 from django.db import models
 
+class Category(models.Model):
+    name = models.CharField(max_length=100)
 
-class Department (models.Model):
-    name = models.CharField(max_length=100, unique=True) # can't name a departament as any other departament
-    
-    def __str__ (self): # Define what to show when the department is called in a template without fields 
-        return self.name       
-    
-    def save(self, *args, **kwargs):
-        creating = self.pk is None          # check if the department is being created or updated                                            
-        super().save(*args, **kwargs)       # each time we save the instance
-        
-        if creating:                        # when a new department is created
-            Inventory.objects.create(name=self.name, department=self) 
-                                            # a new Inventory will be auto created with the same name
-                                            # and auto associated with its department.
-
-
-
-class Category (models.Model):
-    name = models.CharField(max_length=100,
-                            unique=True)    # can't name a new category as previous categories
-     
-    def __str__ (self):                    
-        return self.name  # Define what to show when the category is called in a template without fields
-    class Meta:
-        verbose_name_plural = "categories" # Define the plural name show in admin panel
-
-
-
-
-
-
-class Inventory (models.Model):
-    name = models.CharField(
-                            max_length=100,
-                            editable=False              # we auto create each department inventory 
-                            )
-    department = models.OneToOneField(
-                            Department,                 # one department could have one inventory
-                            
-                            on_delete=models.CASCADE,   # if department is deleted, delete its inventory
-                            ) 
-    item_count = models.PositiveIntegerField(default=0) # How many items it has
-    
-    def __str__ (self): # Define what to show when the inventory is called in a template without fields
-         return f"{self.name} Dept." # ex: if name is "science" it'll return "Science department inventory"
-
-    class Meta:
-        verbose_name_plural = "inventory lists" # Define the plural name show in admin panel  
-
-
-class Item (models.Model):
-    name = models.CharField(max_length=100,
-                            unique=True)                # can't name a new item as any of previous items
-    
-    amount = models.PositiveIntegerField(default=1)
-    
-    created_at = models.DateTimeField(auto_now_add=True)          # Automatically set the field to now when the item is first created.
-    updated_at = models.DateTimeField(auto_now=True)              # Automatically set the field to now every time the item is saved.
-       
-       
-    inventory = models.ManyToManyField(                     # one inventory has many items and one item could be in many inventories
-                                Inventory,                  
-                                related_name="items",       # how to call all items from a Inventory
-                                )      # ex: inventory.items return all items of a desired Inventory 
-                                                            
-    
-       
-    category = models.ForeignKey(                           # one category has many items but one item just has one category
-                                Category,                   
-                                on_delete=models.SET_NULL,  # if category is deleted, set category null
-                                null= True, blank= False,    # non required field
-                                related_name="items", default=None)       # how to call all items from a category
-                                                            # ex: category.items return all items of a desired category 
-     
-     
-    def __str__ (self): # Define what to show when the item is called in a template without fields 
+    def __str__(self):
         return self.name
     
     
     
+class Item(models.Model):
+    name = models.CharField(max_length=100)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    total = models.PositiveIntegerField(default=0)
+    available = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)          # Automatically set the field to now when the item is first created.
+    updated_at = models.DateTimeField(auto_now=True)              # Automatically set the field to now every time the item is saved.
 
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.pk:  # if creating a new instance
+            self.available = self.total
+        elif self.total != self._original_total:  # if total is modified
+            self.available += self.total - self._original_total
+        super(Item, self).save(*args, **kwargs)
+        self._original_total = self.total  # save the original value of total
+
+    def __init__(self, *args, **kwargs):
+        super(Item, self).__init__(*args, **kwargs)
+        self._original_total = self.total  # save the original value of total
+
+
+
+class Inventory(models.Model):
+    department = models.CharField(max_length=150)
+    items = models.ManyToManyField(Item, through='ItemInventory', related_name="inventories")
+
+    def __str__(self):
+        return f"{self.department} Inventory"
+
+
+
+
+
+class ItemInventory(models.Model):
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    inventory = models.ForeignKey(Inventory, on_delete=models.CASCADE)
+    amount = models.PositiveIntegerField(default=0)
     
+    def __str__(self):
+        return f"{self.item.name} on {self.inventory.department} inventory"
+
+    def save(self, *args, **kwargs):
+        if not self.pk:  # if creating a new instance
+            self.item.available -= self.amount
+        else:
+            original_instance = ItemInventory.objects.get(pk=self.pk)
+            self.item.available += original_instance.amount - self.amount
+        super(ItemInventory, self).save(*args, **kwargs)
+        self.item.save()  # save the updated available field in Item model

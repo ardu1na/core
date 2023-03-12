@@ -1,0 +1,94 @@
+from django.db import models
+from django.db.models import Sum
+from django.db.models.functions import Coalesce
+
+
+class Department (models.Model):
+    name = models.CharField(max_length=100, unique=True) # can't name a departament as any other departament
+    
+    def __str__ (self): # Define what to show when the department is called in a template without fields 
+        return self.name       
+    
+    def save(self, *args, **kwargs):
+        creating = self.pk is None          # check if the department is being created or updated                                            
+        super().save(*args, **kwargs)       # each time we save the instance
+        
+        if creating:                        # when a new department is created
+            Inventory.objects.create(name=self.name, department=self) 
+                                            # a new Inventory will be auto created with the same name
+                                            # and auto associated with its department.
+
+
+
+class Category (models.Model):
+    name = models.CharField(max_length=100,
+                            unique=True)    # can't name a new category as previous categories
+     
+    def __str__ (self):                    
+        return self.name  # Define what to show when the category is called in a template without fields
+    class Meta:
+        verbose_name_plural = "categories" # Define the plural name show in admin panel
+
+
+
+
+
+class Inventory (models.Model):
+    name = models.CharField(
+                            max_length=100,
+                            editable=False              # we auto create each department inventory 
+                            )
+    department = models.OneToOneField(
+                            Department,                 # one department could have one inventory
+                            
+                            on_delete=models.CASCADE,   # if department is deleted, delete its inventory
+                            )
+        
+              
+    
+    def __str__ (self): # Define what to show when the inventory is called in a template without fields
+         return f"{self.name} Dept." # ex: if name is "science" it'll return "Science Dept."
+
+    class Meta:
+        verbose_name_plural = "inventories" # Define the plural name show in admin panel  
+    
+    
+
+
+class Item (models.Model):
+    name = models.CharField(max_length=100,
+                            unique=True)                # can't name a new item as any of previous items
+    
+    total = models.PositiveIntegerField(default=0)
+    available = models.PositiveIntegerField(default=0)  # field to track available items
+
+    created_at = models.DateTimeField(auto_now_add=True)          # Automatically set the field to now when the item is first created.
+    updated_at = models.DateTimeField(auto_now=True)              # Automatically set the field to now every time the item is saved.       
+       
+    category = models.ForeignKey(                           # one category has many items but one item just has one category
+                                Category,                   
+                                on_delete=models.SET_NULL,  # if category is deleted, set category null
+                                null= True, blank= False,    # non required field
+                                related_name="items", default=None)       # how to call all items from a category
+                                                            # ex: category.items return all items of a desired category                       
+                                    
+     
+    def __str__ (self): # Define what to show when the item is called in a template without fields 
+        return self.name
+    
+    def save(self, *args, **kwargs):
+        if not self.pk:  # Only set available equal to total when creating a new instance
+            self.available = self.total
+        super().save(*args, **kwargs)
+        
+        
+        
+        
+    
+class ItemInventory(models.Model):
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    inventory = models.ForeignKey(Inventory, on_delete=models.CASCADE)
+    count = models.PositiveIntegerField(default=0) #how many items this inventory has
+    def __str__ (self):
+        return f'{self.count} {self.item} of {self.inventory}'
+

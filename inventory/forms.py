@@ -1,7 +1,7 @@
 
 from django import forms
 
-from inventory.models import Item, Category, Department, Inventory
+from inventory.models import Item, Category, Inventory
 
 class CategoryForm(forms.ModelForm):
     class Meta:
@@ -57,15 +57,15 @@ class ItemForm(forms.ModelForm):
 
 
 
-class DepartmentForm(forms.ModelForm):
+class InventoryForm(forms.ModelForm):
     class Meta:
-        model = Department
-        fields = ('name',)
+        model = Inventory
+        fields = ('department',)
         widgets = {
-            'name' : forms.TextInput(
+            'department' : forms.TextInput(
                 attrs={
                     'class':"form-control",
-                    'id':"name",
-                    'placeholder':"Name",
+                    'id':"department",
+                    'placeholder':"Department",
                     }),
         }

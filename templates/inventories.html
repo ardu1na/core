@@ -1,10 +1,10 @@
 {% extends 'layout/base.html' %}
-{% block 'title' %} Departments {% endblock %}
+{% block 'title' %} INVENTORIES {% endblock %}
 
 {% block breadcrumbs %}
   {{ block.super }}
 
-        <li class="breadcrumb-item"><a  class="text-white" href="{% url 'departments' %}"> Departments </a></li>
+        <li class="breadcrumb-item"><a  class="text-white" href="{% url 'inventories' %}"> INVENTORIES </a></li>
 
         
 {% endblock %}
@@ -14,16 +14,16 @@
 
 
 
-    <!-- Add Department Modal -->
-    <div class="modal fade " id="addDepartment" tabindex="-1" aria-labelledby="addDepartmentLabel" aria-hidden="true">
+    <!-- Add Inventory Modal -->
+    <div class="modal fade " id="addInventory" tabindex="-1" aria-labelledby="addInventoryLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="addDepartmentLabel">Add a new Department</h1>
+                    <h1 class="modal-title fs-5" id="addInventoryLabel">Add a new Inventory</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
             
-                <!--- ADD  DEPT. FORM -->
+                <!--- ADD  Inventory. FORM -->
                 <form  method="post">
                     {% csrf_token %}
                     <div class="modal-body">
@@ -34,7 +34,7 @@
                     </div>
                     <div class="modal-footer">
                         <div class="d-flex text-center">
-                            <button type="submit" class="btn btn-primary px-3" name="adddepartment">
+                            <button type="submit" class="btn btn-primary px-3" name="addinventory">
                             <i class="fa-solid fa-check me-2"></i> Submit</button>
                         </div>
                     </div>
@@ -43,33 +43,33 @@
             </div>
         </div>
     </div>
-    <!-- END Add Department Modal -->
+    <!-- END Add Inventory Modal -->
 
 
 
-    <!-- DELETE DEPT. ALERT -->
+    <!-- DELETE Inventory. ALERT -->
     <div class="my-2">
         {% if 'deleted' in request.GET %}
         <div class="alert alert-danger alert-dismissible fade show mx-5" role="alert">
-            <i class="fa-regular fa-circle-xmark me-2"></i> Department deleted!
+            <i class="fa-regular fa-circle-xmark me-2"></i> Inventory deleted!
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         {% endif %}
     </div>
-    <!-- ADD DEPT. ALERT -->
+    <!-- ADD Inventory. ALERT -->
     <div class="my-2">
         {% if 'added' in request.GET %}
         <div class="alert alert-success alert-dismissible fade show mx-5" role="alert">
-            ☑ Department added successfully!
+            ☑ Inventory added successfully!
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         {% endif %}
     </div>
- <!-- EDITED DEPT. ALERT -->
+ <!-- EDITED Inventory. ALERT -->
  <div class="my-2">
     {% if 'changed' in request.GET %}
     <div class="alert alert-info alert-dismissible fade show mx-5" role="alert">
-        ☑ Department changed successfully!
+        ☑ Inventory changed successfully!
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     {% endif %}
@@ -78,28 +78,28 @@
 
 
     <div class="container mx-5">
-        {% if departments %}
-            <h1 class="my-3 text-center">DEPARTMENTS</h1>
+        {% if inventories %}
+            <h1 class="my-3 text-center">INVENTORIES</h1>
 
             <div class="py-1 mb-4 mx-5">
-                <form class="d-flex flex-row" action="{% url 'departments' %}" method="GET">
-                    <input class="form-control shadow"  type="text" name="q" placeholder="Search departments...">
+                <form class="d-flex flex-row" action="{% url 'inventories' %}" method="GET">
+                    <input class="form-control shadow"  type="text" name="q" placeholder="Search inventories...">
                     <button class="btn btn-dark shadow"  type="submit">Search</button>
                 </form>
             </div>  
 
             <div class="d-flex flex-row-reverse pb-1 mx-4">
-                <button type="button" class="btn btn-light fs-5 shadow-l" data-bs-toggle="modal" data-bs-target="#addDepartment">
+                <button type="button" class="btn btn-light fs-5 shadow-l" data-bs-toggle="modal" data-bs-target="#addInventory">
                     <i class="fa-solid fa-plus me-2"></i> <strong>Add new</strong>
                 </button>
             </div>
 
-            <!-- TABLE ALL departmentS -->
+            <!-- TABLE ALL inventoryS -->
             <div class="py-3 px-3 my-4 text-center">
                 <table class="table table-responsive table-bordered align-middle table-hover rounded-lg bg-white shadow-lg">
                     <thead>
                     <tr>
-                        <th scope="col" class=" py-4">DEPT.</th>
+                        <th scope="col" class=" py-4">Inventory.</th>
                         <th scope="col" class="py-4">ITEMS</th>
 
                         <th class="text-center  py-4">
@@ -109,28 +109,28 @@
                     </thead>
 
                     <tbody>
-                        {% for department in departments %}
+                        {% for inventory in inventories %}
                             <tr>
-                                <td><a href="{% url 'editdepartment' id=department.id %}">{{department.name}}</a></td>
+                                <td><a href="{% url 'editinventory' id=inventory.id %}">{{inventory.department}}</a></td>
                                 
-                                <td><a href="{% url 'deptitems' id=department.inventory.id %}">{{department.name}} INVENTORY </a></td>
+                                <td><a href="{% url 'deptitems' id=inventory.id %}">SEE ITEMS  </a></td>
 
 
                                 <!-- ACTION BUTTONS -->
                                 <td class="borderless">
 
                                     <!-- delete BUTTON -->
-                                    <button type="button" class="shadow-sm btn btn-danger me-2" data-bs-toggle="modal" data-bs-target="#deletedepartment{{department.id}}">
+                                    <button type="button" class="shadow-sm btn btn-danger me-2" data-bs-toggle="modal" data-bs-target="#deleteinventory{{inventory.id}}">
                                         <i class="fa-solid fa-trash fs-7 "></i>
                                     </button>
 
-                                    <div class="modal fade " id="deletedepartment{{department.id}}" tabindex="-1" aria-labelledby="deletedepartmentLabel" aria-hidden="true">
-                                        {% include 'deletedepartment.html' %}
+                                    <div class="modal fade " id="deleteinventory{{inventory.id}}" tabindex="-1" aria-labelledby="deleteinventoryLabel" aria-hidden="true">
+                                        {% include 'deleteinventory.html' %}
                                     </div>
 
 
                                     <!-- edit BUTTON -->
-                                    <a href="{% url 'editdepartment' id=department.id %}" class="shadow-sm btn btn-secondary">
+                                    <a href="{% url 'editinventory' id=inventory.id %}" class="shadow-sm btn btn-secondary">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </a>
 
@@ -139,24 +139,24 @@
                         {% endfor %}
                     </tbody>
                 </table>
-            </div>     <!-- END TABLE ALL departmentS -->
+            </div>     <!-- END TABLE ALL inventoryS -->
 
 
         {% elif 'q' in request.GET %}
             <div class="col-12 d-flex flex-row justify-content-around py-4">
 
-                <h5> No departments matching... </h5>
+                <h5> No inventories matching... </h5>
 
                 <div class="py-1 mb-4 mx-5">
-                    <form class="d-flex flex-row" action="{% url 'departments' %}" method="GET">
-                        <input class="form-control"  type="text" name="q" placeholder="Search departments...">
+                    <form class="d-flex flex-row" action="{% url 'inventories' %}" method="GET">
+                        <input class="form-control"  type="text" name="q" placeholder="Search inventories...">
                         <button class="btn btn-dark"  type="submit">Search</button>
                     </form>
                 </div>  
             </div> 
             <div class="py-1 mb-4 mx-5">
 
-                <a href="{% url 'departments' %}" class="btn fs-7 mx-2">
+                <a href="{% url 'inventories' %}" class="btn fs-7 mx-2">
                     <i class="fa-solid fa-arrow-left me-2 fs-7"></i> Return
                 </a>
             </div>  
@@ -164,9 +164,9 @@
 
         {% else %}
         <div class="col-12 d-flex flex-row justify-content-around pb-4">
-            <h3> No departments yet... </h3>
+            <h3> No inventories yet... </h3>
 
-            <button type="button" class="btn btn-light fs-4 shadow-l px-4" data-bs-toggle="modal" data-bs-target="#addDepartment">
+            <button type="button" class="btn btn-light fs-4 shadow-l px-4" data-bs-toggle="modal" data-bs-target="#addInventory">
                 <i class="fa-solid fa-plus me-2"></i> <strong>Add some</strong>
             </button>
         </div> 

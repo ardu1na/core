@@ -9,7 +9,7 @@
   {{ block.super }}
 
         <li class="breadcrumb-item"><a  class="text-white" href="{% url 'items' %}">All Items  </a></li>
-        <li class="breadcrumb-item"><a class="text-white" ">{{category}}</a></li>
+        <li class="breadcrumb-item"><a class="text-white">{{category}}</a></li>
 {% endblock %}
 
 
@@ -18,14 +18,48 @@
 {% block 'content' %}
 
     
+<div class="modal fade " id="deletecategory" tabindex="-1" aria-labelledby="deletecategoryLabel" aria-hidden="true">
+
+<!--Delete category Modal -->
+<div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+               
+            <div class="modal-body text-center py-5">
+                <p class="fs-5 my-2">Deleting {{category.name}}...</p>
+                <h4 class="fs-2 my-2">¿Are you sure?</h4>
+
+                <div class="form-floating mt-5">
+                    <a href="./" class="btn fs-7 mx-2">
+                        <i class="fa-solid fa-arrow-left me-2 fs-7"></i> Nop, go back
+                    </a>
+                    <a href="{% url 'deletecategory' id=category.id %}" class="shadow-sm btn btn-danger fs-6 p-3">
+                        <i class="fa-regular fa-trash-can fs-5 me-1"></i> Yes, delete it!
+                    </a>
+                </div>
+            </div>
+
+    </div>
+</div>
+<!-- END category item Modal -->
+</div>
+
 
     <div class="container py-3 ">
         <div class="row">          
             <div class="col-xl-10 m-auto">
-                <div class="card">
+                <div class="card px-5">
                     <div class="card-body p-4">
-                        <h2 class="my-3  pb-5">Change category: {{category}}</h2>
-                        <hr>
+                        <!-- delete BUTTON -->
+                        <button type="button" class="shadow-sm btn btn-danger  mx-2" data-bs-toggle="modal" data-bs-target="#deletecategory">
+                            <i class="fa-solid fa-trash "></i> 
+                        </button>
+
+                            
+                            <h2 class="my-3  pb-5">Change category: {{category}}</h2>
+                            
+                        </div>
+
+                         
 
                         <!--- EDIT  ITEM FORM -->
                         <form  method="post">
@@ -44,6 +78,8 @@
                                     <i class="fa-solid fa-check me-2"></i> Submit</button>
                                 </div>
                         </form>
+
+                       
                     </div>
                 </div>
 

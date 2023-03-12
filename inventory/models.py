@@ -10,7 +10,7 @@ class Category(models.Model):
     
 class Item(models.Model):
     name = models.CharField(max_length=100)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, default=None)
     total = models.PositiveIntegerField(default=0)
     available = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)          # Automatically set the field to now when the item is first created.

@@ -16,12 +16,12 @@ urlpatterns = [
 
     path('category/add/<int:id>/', views.addcategory, name="addcategory"),
     path('category/add/', views.addcategory, name="addnewcategory"),
-
     path('category/edit/<int:id>/', views.editcategory, name="editcategory"), 
+    path('category/delete/<int:id>/', views.deletecategory, name="deletecategory"), 
 
 
-    path('departments/', login_required(views.departments), name='departments'),
-    path('deletedepartment/<int:id>/', views.deletedepartment, name="deletedepartment"),
-    path('editdepartment/<int:id>/', views.editdepartment, name="editdepartment"),
+    path('inventories/', login_required(views.inventories), name='inventories'),
+    path('deleteinventory/<int:id>/', views.deleteinventory, name="deleteinventory"),
+    path('editinventory/<int:id>/', views.editinventory, name="editinventory"),
 
 ]

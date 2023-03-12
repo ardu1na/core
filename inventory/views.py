@@ -237,57 +237,62 @@ def editcategory(request, id):
             return HttpResponseBadRequest("Ups! something gets wrong, go back and try again please.")
 
 
+def deletecategory(request, id):
+    category = Category.objects.get(id=id)
+    category.delete()
+    return redirect(reverse('items')+ "?categorydeleted")
 
-def departments(request):
-    departments = Inventory.objects.all()
+
+def inventories(request):
+    inventories = Inventory.objects.all()
     addform=InventoryForm()
     search_query = request.GET.get('q')
 
     if search_query:
-        departments = departments.filter(name__icontains=search_query)
+        inventories = inventories.filter(name__icontains=search_query)
 
     if request.method == 'GET':
         addform = InventoryForm()
         
     if request.method == 'POST':
-        if "adddepartment" in request.POST:
+        if "addinventory" in request.POST:
             addform = InventoryForm(request.POST)
             if addform.is_valid():
                 addform.save()
-                return redirect(reverse('departments')+ "?added")
+                return redirect(reverse('inventories')+ "?added")
             else:
                 return HttpResponseBadRequest("Ups! something gets wrong, go back and try again please.") 
     data = {
-        'departments' : departments,
+        'inventories' : inventories,
         'addform' : addform,
     }
-    return render (request, 'departments.html', data)
+    return render (request, 'inventories.html', data)
 
 
 
-def deletedepartment(request, id):
-    department = Inventory.objects.get(id=id)
-    department.delete()
-    return redirect(reverse('departments')+ "?deleted")
+def deleteinventory(request, id):
+    inventory = Inventory.objects.get(id=id)
+    inventory.delete()
+    return redirect(reverse('inventories')+ "?deleted")
 
 
 
-def editdepartment(request, id):
-    editdepartment = Inventory.objects.get(id=id)
+def editinventory(request, id):
+    editinventory = Inventory.objects.get(id=id)
 
     if request.method == "GET":
-        editform = InventoryForm(instance=editdepartment)
+        editform = InventoryForm(instance=editinventory)
         data = {
             'editform': editform,
-            'editdepartment': editdepartment,
+            'editinventory': editinventory,
             'id': id,
             }
-        return render (request, 'editdepartment.html', data)
+        return render (request, 'editinventory.html', data)
 
     if request.method == 'POST':
-        editform = InventoryForm(request.POST, instance=editdepartment)
+        editform = InventoryForm(request.POST, instance=editinventory)
         if editform.is_valid():
             editform.save()
-            return redirect(reverse('departments')+ "?changed")
+            return redirect(reverse('inventories')+ "?changed")
         else:
             return HttpResponseBadRequest("Ups! something gets wrong, go back and try again please.")

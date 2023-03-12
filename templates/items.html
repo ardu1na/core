@@ -6,7 +6,7 @@
 {% block breadcrumbs %}
   {{ block.super }}
     {% if 'id' in request.resolver_match.kwargs %}
-        <li class="breadcrumb-item"><a  class="text-white" href="{% url 'departments' %}"> Departments </a></li>
+        <li class="breadcrumb-item"><a  class="text-white" href="{% url 'inventories' %}"> Inventories </a></li>
 
         <li class="breadcrumb-item"><a  class="text-white"href="{% url 'deptitems' id=inventory.id %}">{{ inventory.name }} Inventory </a></li>
     {% else %}
@@ -206,23 +206,28 @@
                                 <td><a href="{% url 'edititem' id=item.id %}">{{item.name}}</a></td>
                                 <td>{{item.created_at|date:"d/m/Y"}}</td>
                                 <td>{{item.updated_at|date:"d/m/Y"}}</td>
+
                                 {% if 'id'  in request.resolver_match.kwargs %}
-                                
                                 {% else %}
-                                <td>
-                                    {% if item.inventories.all.count > 1 %}
-                                      {% for inventory in item.inventories.all.distinct %}
-                                        <a href="{% url 'deptitems' id=inventory.id %}">{{inventory}}</a>
-                                        {% if not forloop.last %}/ {% endif %}
-                                      {% endfor %}
+                                    <td>
+                                    {% if item.inventories.all %}
+
+                                        {% if item.inventories.all.count > 1 %}
+                                            {% for inventory in item.inventories.all.distinct %}
+                                                <a href="{% url 'deptitems' id=inventory.id %}">{{inventory}}</a>
+                                                {% if not forloop.last %}/ {% endif %}
+                                            {% endfor %}
+                                        {% else %}
+                                            <a href="{% url 'deptitems' id=item.inventories.all.first.id %}">{{item.inventories.all.first}}</a>
+                                        {% endif %}
                                     {% else %}
-                                      <a href="{% url 'deptitems' id=item.inventories.all.first.id %}">{{item.inventories.all.first}}</a>
+                                        None
                                     {% endif %}
-                                  </td>
-                                  
-                                <td>{{item.total}}</td>
-                                <td>{{item.available}}</td>
+                                    </td>                                  
+                                    <td>{{item.total}}</td>
+                                    <td>{{item.available}}</td>
                                 {% endif %}
+
                                 {% if item.category %}
                                 <td><a href="{% url 'editcategory' id=item.category.id %}">{{item.category}}</a></td>
                                 {% else %}

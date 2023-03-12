@@ -1,45 +1,83 @@
 {% extends 'layout/base.html' %}
-{% block 'title' %} Change {{editdepartment.name}} {% endblock %}
+{% block 'title' %} Change {{editinventory.name}} {% endblock %}
 
 
 
 {% block breadcrumbs %}
   {{ block.super }}
 
-        <li class="breadcrumb-item"><a  class="text-white" href="{% url 'departments' %}">All Departments  </a></li>
-        <li class="breadcrumb-item"><a  class="text-white">{{editdepartment.name}}</a></li>
+        <li class="breadcrumb-item"><a  class="text-white" href="{% url 'inventories' %}">All Inventories  </a></li>
+        <li class="breadcrumb-item"><a  class="text-white">{{editinventory.name}}</a></li>
 {% endblock %}
 
 
 {% block 'content' %}
 
     
+<!-- Add Item into inventory Modal -->
+<div class="modal fade " id="addItem" tabindex="-1" aria-labelledby="addItemLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="addItemLabel">Add Items</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+        
+            <!--- ADD  ITEM FORM -->
+            <form  method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="form-group mb-5 d-flex flex-row">
+                        {{addform.item}}
+                    </div>
+                    <div class="form-group mb-5 d-flex flex-row">
+                        {{addform.amount}}
+                    </div>
+                    {{ addform.inventory }} 
+                </div>
+                <div class="modal-footer">
+                    <div class="d-flex text-center">
+                        <button type="submit" class="btn btn-primary px-3" name="additems">
+                        <i class="fa-solid fa-check me-2"></i> Submit</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
 
     <div class="container py-3 ">
         <div class="row">          
             <div class="col-xl-10 m-auto">
                 <div class="card">
                     <div class="card-body p-4">
-                        <h2 class="my-3  pb-5">Change department {{editdepartment.id}} - {{editdepartment.name}} </h2>
+                        <h2 class="my-3  pb-5">Change inventory {{editinventory.id}} - {{editinventory.department}} </h2>
                         <hr>
 
-                        <!--- EDIT  Department FORM -->
+                        <!--- EDIT  Inventory FORM -->
                         <form  method="post">
                             {% csrf_token %}
                                 <p class="fs-5 mx-4">
                                     Name 
                                 </p>
                                 <div class="form-group mb-5 d-flex flex-row">
-                                    {{editform.name}}
+                                    {{editform.department}}
                                 </div>
-                               
-                            </div>
+
+                                                               
 
                                 <div class="d-flex flex-row text-center m-auto py-5">
-                                    <button type="submit" class="btn btn-primary px-3 fs-3" name="editdepartment">
+                                    <button type="submit" class="btn btn-primary px-3 fs-3" name="editinventory">
                                     <i class="fa-solid fa-check me-2"></i> Submit</button>
                                 </div>
                         </form>
+
+                        <div class="d-flex flex-row-reverse pb-4 mx-4">
+                            <button type="button" class="btn btn-light fs-4 shadow-l" data-bs-toggle="modal" data-bs-target="#addItem">
+                                <i class="fa-solid fa-plus me-2"></i> <strong>Add new Item</strong>
+                            </button>
+                        </div> 
                     </div>
                 </div>
 

@@ -7,8 +7,8 @@ from django.db.models import Q
 from django.http import HttpResponse
 from reportlab.pdfgen import canvas
 
-from inventory.models import Item, Inventory, Category
-from inventory.forms import ItemForm, InventoryForm, CategoryForm, AddItemForm
+from inventory.models import Item, Inventory, Category, ItemInventory
+from inventory.forms import ItemForm, InventoryForm, CategoryForm, AddItemForm, ItemInventoryForm
 
 def index(request):    
     return render (request, 'index.html', {})
@@ -282,7 +282,10 @@ def editinventory(request, id):
 
     if request.method == "GET":
         editform = InventoryForm(instance=editinventory)
+        
+        addform = ItemInventoryForm(initial={'inventory': editinventory})
         data = {
+            'addform' : addform,
             'editform': editform,
             'editinventory': editinventory,
             'id': id,
@@ -290,6 +293,22 @@ def editinventory(request, id):
         return render (request, 'editinventory.html', data)
 
     if request.method == 'POST':
+        addform = ItemInventoryForm(initial={'inventory': editinventory})
+        editform = InventoryForm(instance=editinventory)
+        editinventory = Inventory.objects.get(id=id)
+
+        if "additems" in request.POST:
+            addform = ItemInventoryForm(request.POST, initial={'inventory': editinventory})
+            if addform.is_valid():
+                addform.save()
+                data = {
+                    'addform': addform,
+                    'editform': editform,
+                    'editinventory': editinventory,
+                    'id': id,
+                }
+                return render(request, 'editinventory.html', data)
+            
         editform = InventoryForm(request.POST, instance=editinventory)
         if editform.is_valid():
             editform.save()

@@ -1,7 +1,7 @@
 
 from django import forms
 
-from inventory.models import Item, Category, Inventory
+from inventory.models import Item, Category, Inventory, ItemInventory
 
 class CategoryForm(forms.ModelForm):
     class Meta:
@@ -64,6 +64,7 @@ class ItemForm(forms.ModelForm):
 
 
 class InventoryForm(forms.ModelForm):
+   
     class Meta:
         model = Inventory
         fields = ('department',)
@@ -74,4 +75,32 @@ class InventoryForm(forms.ModelForm):
                     'id':"department",
                     'placeholder':"Department",
                     }),
+        }
+        
+        
+        
+class ItemInventoryForm(forms.ModelForm):
+    item = forms.ModelChoiceField(
+                    queryset=Item.objects.all(),
+                    widget=forms.Select(
+                        attrs={
+                                'class':"form-control",
+                                'id':"item",
+                                'placeholder':"item",
+                                }),
+        
+                    )
+    
+    class Meta:
+        model = ItemInventory
+        fields = ('item', 'amount', 'inventory')
+        widgets = {
+            'amount' : forms.TextInput(
+                attrs={
+                    'class':"form-control",
+                    'id':"amount",
+                    'placeholder':"Quantity",
+                    }),
+            'inventory': forms.HiddenInput(),  
+
         }

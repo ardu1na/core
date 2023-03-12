@@ -27,9 +27,15 @@
             <form  method="post">
                 {% csrf_token %}
                 <div class="modal-body">
+                    <p class="fs-5 mx-4">
+                        Select an item
+                    </p>
                     <div class="form-group mb-5 d-flex flex-row">
                         {{addform.item}}
                     </div>
+                    <p class="fs-5 mx-4">
+                        Quantity
+                    </p>
                     <div class="form-group mb-5 d-flex flex-row">
                         {{addform.amount}}
                     </div>

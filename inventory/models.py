@@ -10,7 +10,7 @@ class Category(models.Model):
     
     
 class Item(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, default=None)
     total = models.PositiveIntegerField(default=0)
     available = models.PositiveIntegerField(default=0)

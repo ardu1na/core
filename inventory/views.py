@@ -184,7 +184,25 @@ def items(request, id=None):
         }
     return render  (request, 'items.html', data)
 
+def additem(request):
+    addform = ItemForm()
 
+    if request.method == 'GET':
+            addform = ItemForm()
+            
+    if request.method == 'POST':
+        if "additem" in request.POST:
+            addform = ItemForm(request.POST)
+            print(addform.errors)
+            if addform.is_valid():
+                addform.save()
+                return redirect('items')
+            else:
+                return HttpResponseBadRequest("Ups! something gets wrong, go back and try again please.") 
+    data = {
+        'addform' : addform,
+    }
+    return render  (request, 'additem.html', data)
 
 def deleteitem(request, id):
     item = Item.objects.get(id=id)

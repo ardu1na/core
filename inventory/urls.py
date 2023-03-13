@@ -13,6 +13,7 @@ urlpatterns = [
     path('items/<int:id>/', login_required(views.items), name='deptitems'),
     path('deleteitem/<int:id>/', views.deleteitem, name="deleteitem"),
     path('deleteitemsinventory/<int:id>/', views.deleteitemsinventory, name="deleteitemsinventory"),
+    path('additem/', login_required(views.additem), name='additem'),
 
     path('edititem/<int:id>/', views.edititem, name="edititem"),
 

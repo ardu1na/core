@@ -263,7 +263,7 @@ def inventories(request):
     search_query = request.GET.get('q')
 
     if search_query:
-        inventories = inventories.filter(name__icontains=search_query)
+        inventories = inventories.filter(department__icontains=search_query)
 
     if request.method == 'GET':
         addform = InventoryForm()
@@ -293,11 +293,13 @@ def deleteinventory(request, id):
 
 def editinventory(request, id):
     editinventory = Inventory.objects.get(id=id)
-
+    itemsinventory = ItemInventory.objects.filter(inventory=editinventory)
+    
     if request.method == "GET":
         editform = InventoryForm(instance=editinventory)
         addform = ItemInventoryForm(initial={'inventory': editinventory})
         data = {
+            'itemsinventory':itemsinventory,
             'addform' : addform,
             'editform': editform,
             'editinventory': editinventory,
@@ -325,6 +327,8 @@ def editinventory(request, id):
                     'editinventory': editinventory,
                     'id': id,
                     'error_message': error_message,
+                    'itemsinventory':itemsinventory,
+
                 }
                 return render(request, 'editinventory.html', data)
 

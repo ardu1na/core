@@ -104,3 +104,25 @@ class ItemInventoryForm(forms.ModelForm):
             'inventory': forms.HiddenInput(),  
 
         }
+        
+        
+    
+        
+class EditItemInventoryForm(forms.ModelForm):
+    
+    class Meta:
+        model = ItemInventory
+        fields = ('amount', 'inventory', 'item')
+        widgets = {
+            'amount' : forms.TextInput(
+                attrs={
+                    'class':"form-control",
+                    'id':"amount",
+                    'placeholder':"Quantity",
+                    }),
+            'inventory': forms.HiddenInput(),  
+            'item': forms.HiddenInput(),  
+
+        }
+        
+

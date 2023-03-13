@@ -254,7 +254,7 @@
                             <tr>
                                 <td>
                                     {% if 'id'  in request.resolver_match.kwargs %}
-                                    <a href="{% url 'edititem' id=item.item.id %}">{{item.item.name}}</a></td>
+                                    <a href="{% url 'edititeminventory' id=item.id %}">{{item.item.name}}</a></td>
                                     {% else %}
                                     <a href="{% url 'edititem' id=item.id %}">{{item.name}}</a></td>
                                     {% endif %}

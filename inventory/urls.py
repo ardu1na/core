@@ -16,6 +16,7 @@ urlpatterns = [
     path('additem/', login_required(views.additem), name='additem'),
 
     path('edititem/<int:id>/', views.edititem, name="edititem"),
+    path('edititeminventory/<int:id>/', views.edititeminventory, name="edititeminventory"),
 
     path('category/add/<int:id>/', views.addcategory, name="addcategory"),
     path('category/add/', views.addcategory, name="addnewcategory"),

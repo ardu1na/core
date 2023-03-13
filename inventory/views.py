@@ -10,7 +10,7 @@ from django.db import IntegrityError
 from reportlab.pdfgen import canvas
 
 from inventory.models import Item, Inventory, Category, ItemInventory
-from inventory.forms import ItemForm, InventoryForm, CategoryForm, AddItemForm, ItemInventoryForm
+from inventory.forms import ItemForm, InventoryForm, CategoryForm, AddItemForm, ItemInventoryForm, EditItemInventoryForm
 
 def index(request):    
     return render (request, 'index.html', {})
@@ -235,6 +235,26 @@ def edititem(request, id):
 
     if request.method == 'POST':
         editform = ItemForm(request.POST, instance=edititem)
+        if editform.is_valid():
+            editform.save()
+            return redirect(reverse('items')+ "?changed")
+        else:
+            return HttpResponseBadRequest("Ups! something gets wrong, go back and try again please.")
+        
+        
+def edititeminventory(request, id):
+    edititem = ItemInventory.objects.get(id=id)
+    if request.method == "GET":
+        editform = EditItemInventoryForm(instance=edititem)
+        data = {
+            'editform': editform,
+            'edititem': edititem,
+            'id': id,
+            }
+        return render (request, 'edititeminventory.html', data)
+
+    if request.method == 'POST':
+        editform = EditItemInventoryForm(request.POST, instance=edititem)
         if editform.is_valid():
             editform.save()
             return redirect(reverse('items')+ "?changed")

@@ -341,6 +341,7 @@ def inventories(request):
                 addform.save()
                 return redirect(reverse('inventories')+ "?added")
             else:
+                print(addform.errors)
                 return HttpResponseBadRequest("Ups! something gets wrong, go back and try again please.") 
     data = {
         'inventories' : inventories,

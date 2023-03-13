@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.contrib.auth.models import User
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -36,6 +37,8 @@ class Item(models.Model):
 
 class Inventory(models.Model):
     department = models.CharField(max_length=150)
+    user = models.ManyToManyField(User, null=True, blank=True)
+
     items = models.ManyToManyField(Item, through='ItemInventory', related_name="inventories")
 
     def __str__(self):

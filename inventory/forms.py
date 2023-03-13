@@ -1,5 +1,6 @@
 
 from django import forms
+from django.contrib.auth.models import User
 
 from inventory.models import Item, Category, Inventory, ItemInventory
 
@@ -64,7 +65,7 @@ class ItemForm(forms.ModelForm):
 
 
 class InventoryForm(forms.ModelForm):
-   
+    
     class Meta:
         model = Inventory
         fields = ('department',)

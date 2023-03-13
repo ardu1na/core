@@ -276,7 +276,7 @@
 
                                         {% if item.inventories.all.count > 1 %}
                                             {% for inventory in item.inventories.all.distinct %}
-                                                <a href="{% url 'deptitems' id=inventory.id %}">{{inventory}}</a>
+                                                <a href="{% url 'deptitems' id=inventory.id %}">{{inventory}} </a>
                                                 {% if not forloop.last %}/ {% endif %}
                                             {% endfor %}
                                         {% else %}

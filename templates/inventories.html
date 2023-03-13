@@ -19,7 +19,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="addInventoryLabel">Add a new Inventory</h1>
+                    <h1 class="modal-title fs-5" id="addInventoryLabel">Create a new Inventory</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
             
@@ -28,7 +28,10 @@
                     {% csrf_token %}
                     <div class="modal-body">
                         <div class="form-group mb-5 d-flex flex-row">
-                            {{addform.department}}
+                            {{addform.department}} # when you create a department inventory, the user is auto created with the same name as the department and the pass is "nameofdemartment_pass"
+                        </div>
+                        <div class="form-group mb-5 d-flex flex-row">
+                            You can change the pass later in Django Admin Panel
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -89,7 +92,7 @@
 
             <div class="d-flex flex-row-reverse pb-1 mx-4">
                 <button type="button" class="btn btn-light fs-5 shadow-l" data-bs-toggle="modal" data-bs-target="#addInventory">
-                    <i class="fa-solid fa-plus me-2"></i> <strong>Add new</strong>
+                    <i class="fa-solid fa-plus me-2"></i> <strong>Create department inventory</strong>
                 </button>
             </div>
 

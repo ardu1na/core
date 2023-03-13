@@ -3,10 +3,18 @@
 
 
 {% block breadcrumbs %}
-  {{ block.super }}
+    {{ block.super }}
+    {% if request.user.is_superuser%}
+            <li class="breadcrumb-item"><a  class="text-white" href="{% url 'items' %}">All Items  </a></li>
 
-        <li class="breadcrumb-item"><a  class="text-white" href="{% url 'items' %}">All Items  </a></li>
-        <li class="breadcrumb-item"><a  class="text-white">{{edititem.item.name}}</a></li>
+            <li class="breadcrumb-item"><a  class="text-white" href="{% url 'deptitems' id=edititem.inventory.id  %}"> {{edititem.inventory}} </a></li>
+
+    {% else %}        
+
+        <li class="breadcrumb-item"><a  class="text-white" href="{% url 'deptitems' id=edititem.inventory.id  %}">{{edititem.inventory}} </a></li>
+
+    {% endif %}
+            <li class="breadcrumb-item"><a  class="text-white">Item {{edititem.item.name}}</a></li>
 {% endblock %}
 
 
@@ -22,6 +30,9 @@
     {% endif %}
 </div>
     
+{% if error_message %}
+    <p class="my-5 mx-3 text-danger">{{ error_message }}</p>
+{% endif %}
 
     <div class="container py-3 ">
         <div class="row">          
@@ -36,10 +47,10 @@
                             {% csrf_token %}
                                 
                                 <p class="fs-5 mx-4">
-                                      Total  Quantity 
+                                    Update {{edititem.item.name}} amount in this Inventory 
                                 </p>
                                 <div class="form-group mb-5 d-flex flex-row">
-                                    {{editform.amount}} (now is {{edititem.amount}} and there is {{edititem.item.available}} items avaialables)
+                                    {{editform.amount}} (now is {{edititem.amount}} and we have other {{edititem.item.available}} items avaialables of {{edititem.item.total}})
                                 </div>
                                 {{ editform.inventory }} 
                                 {{ editform.item }} 

@@ -63,7 +63,7 @@
                         <div><a href="{% url 'additem' %}" class="btn btn-outline-primary"><i class="fs-5 fa-solid fa-plus"></i></a></div>
                         {% endif %}
 
-                        {{addform.item}}
+                        {{addform.item}} # if we already have this item, we should just change its amount
                     </div>
 
 

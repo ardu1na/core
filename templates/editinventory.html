@@ -95,20 +95,8 @@
                                 </div>
 
 
-                                <h4 class="mx-4">ITEMS</h4>
-                                    {% for itemi in editinventory.items.all.distinct %}
-                                        
-                                        {{itemi.name}} ({{itemi.available}} available of {{itemi.total}} stock) 
-
-                                    {% endfor %}
-
-                                <ul class="fs-5 mx-4">
-                                {% for item in itemsinventory.all %}
-                                    
-                                   <li>{{ item.amount }}  {{item.item.name}} ({{item.item.available}} available of {{item.item.total}} stock) </li>
-
-                                {% endfor %}    
-                                </ul>                          
+                                <a href="{% url 'deptitems' id=editinventory.id %}" class="mx-4 fs-3">SEE ITEMS<a>
+                                                        
 
                                 <div class="d-flex flex-row text-center m-auto py-5">
                                     <button type="submit" class="btn btn-primary px-3 fs-3" name="editinventory">

@@ -254,12 +254,21 @@ def edititeminventory(request, id):
     if request.method == 'POST':
         editform = EditItemInventoryForm(request.POST, instance=edititem)
         id_inv = edititem.inventory.id
-        if editform.is_valid():
-            editform.save()
-            return redirect('deptitems', id=id_inv)
-        else:
-            return HttpResponseBadRequest("Ups! something gets wrong, go back and try again please.")
-
+        try:
+            if editform.is_valid():
+                editform.save()
+                return redirect('deptitems', id=id_inv)
+            else:
+                raise IntegrityError("Invalid form")
+        except IntegrityError:
+            error_message = "ATENTION: There are not enough quantity of this item available!! Try to add less."
+            data = {
+                'error_message' : error_message,
+                'edititem' : edititem,
+                'editform' : editform,
+                'id' : id_inv
+            }
+            return render (request, 'edititeminventory.html', data)
 
 def addcategory(request, id=None):
     if id:

@@ -49,11 +49,13 @@ class Inventory(models.Model):
     def save(self, *args, **kwargs):
         if not self.user:
             self.user = User.objects.create_user(
-                username=self.department,
-                email='',
-                password='',
+                username=self.department.lower().replace(' ', '_'),
+                email="",
+                password=f"{self.department.lower().replace(' ', '_')}_pass",
                 first_name='',
-                last_name=''
+                last_name='',
+                is_active = True,
+                is_staff = True,
             )
             self.id = self.user.id
             self.user.save()

@@ -10,7 +10,7 @@ from django.db import IntegrityError
 from reportlab.pdfgen import canvas
 
 from inventory.models import Item, Inventory, Category, ItemInventory
-from inventory.forms import ItemForm, InventoryForm, CategoryForm, AddItemForm, ItemInventoryForm, EditItemInventoryForm
+from inventory.forms import ItemForm, InventoryForm, CategoryForm,  ItemInventoryForm, EditItemInventoryForm
 
 def index(request):    
     return render (request, 'index.html', {})

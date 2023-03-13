@@ -9,12 +9,13 @@ urlpatterns = [
 
     
     path('', login_required(views.index), name='index'),
+    
+    
     path('items/', login_required(views.items), name='items'),
     path('items/<int:id>/', login_required(views.items), name='deptitems'),
     path('deleteitem/<int:id>/', views.deleteitem, name="deleteitem"),
     path('deleteitemsinventory/<int:id>/', views.deleteitemsinventory, name="deleteitemsinventory"),
     path('additem/', login_required(views.additem), name='additem'),
-
     path('edititem/<int:id>/', views.edititem, name="edititem"),
     path('edititeminventory/<int:id>/', views.edititeminventory, name="edititeminventory"),
 

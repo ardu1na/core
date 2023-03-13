@@ -160,7 +160,7 @@
     </div>
     {% endif %}
 
-    <!-- ADD ITEM ALERT -->
+<!-- ADD ITEM ALERT -->
     <div class="my-2">
         {% if 'added' in request.GET %}
         <div class="alert alert-success alert-dismissible fade show mx-5" role="alert">
@@ -379,22 +379,18 @@
 
 {% block 'extrascripts' %}
 <script>
-    // Obtener los elementos HTML que necesitas
     var itemSelect = document.getElementById('item');
 
-    // Filtrar los items que no están en el inventario
     var filteredOptions = Array.from(itemSelect.options).filter(function(option) {
         return !inventoryItems.includes(parseInt(option.value));
     });
 
-    // Deshabilitar las opciones que ya están en el inventario
     Array.from(itemSelect.options).forEach(function(option) {
         if (inventoryItems.includes(parseInt(option.value))) {
             option.disabled = true;
         }
     });
 
-    // Habilitar las opciones filtradas
     filteredOptions.forEach(function(option) {
         option.disabled = false;
     });

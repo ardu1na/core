@@ -37,12 +37,27 @@ class Item(models.Model):
 
 class Inventory(models.Model):
     department = models.CharField(max_length=150)
-    user = models.ManyToManyField(User, null=True, blank=True)
+    user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE, related_name="inventory")
 
     items = models.ManyToManyField(Item, through='ItemInventory', related_name="inventories")
 
     def __str__(self):
         return f"{self.department} Inventory"
+    
+    
+        
+    def save(self, *args, **kwargs):
+        if not self.user:
+            self.user = User.objects.create_user(
+                username=self.department,
+                email='',
+                password='',
+                first_name='',
+                last_name=''
+            )
+            self.id = self.user.id
+            self.user.save()
+        super().save(*args, **kwargs)
 
 
 

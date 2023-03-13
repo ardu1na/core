@@ -11,10 +11,11 @@
         <li class="nav-item">
           <a class="nav-link" href="{% url 'items' %}">Items</a>
         </li>
+        {% if request.user.is_superuser %}
         <li class="nav-item">
           <a class="nav-link" href="{% url 'inventories' %}">Inventories</a>
         </li>
-        {% if request.user.is_superuser %}
+        
         <li class="nav-item">
           <a class="nav-link" href="/admin">Admin Panel</a>
         </li>

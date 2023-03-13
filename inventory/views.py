@@ -23,11 +23,11 @@ def export_pdf(request, id=None):
         inventory = Inventory.objects.get(id=id)
 
         if search_query:
-            items = Item.objects.filter(inventory__id=inventory.id).filter(Q(name__icontains=search_query) | Q(category__name__icontains=search_query))
-            filename = f'{inventory.name.lower().replace(" ", "_")}_inventory_search_{search_query.lower().replace(" ", "_")}_report.pdf'
+            items = Item.objects.filter(iteminventory__inventory__id=inventory.id).filter(Q(name__icontains=search_query) | Q(category__name__icontains=search_query))
+            filename = f'{inventory.department.lower().replace(" ", "_")}_inventory_search_{search_query.lower().replace(" ", "_")}_report.pdf'
         else:
-            items = Item.objects.filter(inventory__id=inventory.id)
-            filename = f'{inventory.name.lower().replace(" ", "_")}_inventory_report.pdf'
+            items = Item.objects.filter(iteminventory__inventory__id=inventory.id)
+            filename = f'{inventory.department.lower().replace(" ", "_")}_inventory_report.pdf'
     else:
         if search_query:
             items = Item.objects.filter(Q(name__icontains=search_query) | Q(category__name__icontains=search_query))
@@ -44,7 +44,7 @@ def export_pdf(request, id=None):
 
     # Draw the content onto the PDF
     if id:
-        pdf.drawString(100, 750, f"{inventory.name} Inventory Report")
+        pdf.drawString(100, 750, f"{inventory.department} Inventory Report")
     else:
         pdf.drawString(100, 750, "All Items Report")
 

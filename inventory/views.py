@@ -98,33 +98,50 @@ def export_pdf(request, id=None):
 
 def items(request, id=None):
     if id:
+
         inventory = Inventory.objects.get(id=id)
         items = ItemInventory.objects.filter(inventory__id=inventory.id)
         if request.method == 'GET':
             addform = ItemInventoryForm(initial={'inventory': inventory})
 
+        error_message = None
         if "additems" in request.POST:
+            error_message = "ATENTION: There are not enough quantity of this item available!! Try to add less."
             addform = ItemInventoryForm(request.POST, initial={'inventory': editinventory})
             try:
                 if addform.is_valid():
                     addform.save()
+                    data = {
+                        'addform': addform,
+                        'id':id,
+                    }
+                    return redirect('deptitems', id=id)
                 else:
                     raise IntegrityError("Invalid form")
-                
             except IntegrityError:
                 error_message = "ATENTION: There are not enough quantity of this item available!! Try to add less."
+                addform = ItemInventoryForm(initial={'inventory': inventory})
                 data = {
+                    'items' : items,
+                    'inventory' : inventory,
                     'addform': addform,
+                    'total_items_count': items.count(),
+                    'id': id,
                     'error_message': error_message,
-                    'id':id
-                    
                 }
-            data = {
-                    'addform': addform,
-                    'id':id
-                
-            }
-            return redirect('deptitems', id=id)  
+                return render(request, 'items.html', data)
+        data = {
+            'items' : items,
+            'inventory' : inventory,
+            'addform': addform,
+            'total_items_count': items.count(),
+            'id': id,
+            'error_message': error_message,
+        }
+
+            
+            
+
 
         search_query = request.GET.get('q')
 

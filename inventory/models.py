@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -48,17 +49,23 @@ class ItemInventory(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     inventory = models.ForeignKey(Inventory, on_delete=models.CASCADE)
     amount = models.PositiveIntegerField(default=0)
-    created_at = models.DateTimeField(auto_now_add=True)          # Automatically set the field to now when the item is first created.
-    updated_at = models.DateTimeField(auto_now=True)              # Automatically set the field to now every time the item is saved.
-    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
     def __str__(self):
         return f"{self.item.name} on {self.inventory.department} inventory"
 
-    def save(self, *args, **kwargs):
+    def clean(self):
+        super().clean()
         if not self.pk:  # if creating a new instance
             self.item.available -= self.amount
         else:
             original_instance = ItemInventory.objects.get(pk=self.pk)
             self.item.available += original_instance.amount - self.amount
+
+        if self.item.available < 0:
+            raise ValidationError("Amount exceeds available quantity of the item.")
+
+    def save(self, *args, **kwargs):
         super(ItemInventory, self).save(*args, **kwargs)
         self.item.save()  # save the updated available field in Item model

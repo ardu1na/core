@@ -1,18 +1,30 @@
 
-
 <!--Delete item Modal -->
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
                    
                 <div class="modal-body text-center py-5">
-                    <p class="fs-5 my-2">Deleting {{item.name}}...</p>
+                    {% if 'id'  in request.resolver_match.kwargs %}
+
+                    <p class="fs-5 my-2">Deleting all {{item.item.name}} records of this inventory...</p>
                     <h4 class="fs-2 my-2">¿Are you sure?</h4>
 
                     <div class="form-floating mt-5">
                         <a href="./" class="btn fs-7 mx-2">
                             <i class="fa-solid fa-arrow-left me-2 fs-7"></i> Nop, go back
                         </a>
-                        <a href="{% url 'deleteitem' id=item.id %}" class="shadow-sm btn btn-danger fs-6 p-3">
+                        <a href="{% url 'deleteitemsinventory' id=item.id %}" class="shadow-sm btn btn-danger fs-6 p-3">
+                    {% else %}
+                            <p class="fs-5 my-2">Deleting {{item.name}}...</p>
+                            <h4 class="fs-2 my-2">¿Are you sure?</h4>
+        
+                            <div class="form-floating mt-5">
+                                <a href="./" class="btn fs-7 mx-2">
+                                    <i class="fa-solid fa-arrow-left me-2 fs-7"></i> Nop, go back
+                                </a>
+                                <a href="{% url 'deleteitem' id=item.id %}" class="shadow-sm btn btn-danger fs-6 p-3">
+                    {% endif %}    
+
                             <i class="fa-regular fa-trash-can fs-5 me-1"></i> Yes, delete it!
                         </a>
                     </div>

@@ -161,6 +161,14 @@ def deleteitem(request, id):
     item.delete()
     return redirect(reverse('items')+ "?deleted")
 
+def deleteitemsinventory(request, id):
+    item_inventory = ItemInventory.objects.get(id=id)
+    item = item_inventory.item
+    item.available += item_inventory.amount
+    item.save()
+    item_inventory.delete()
+    return redirect(reverse('items')+ "?deleted")
+
 
 
 def edititem(request, id):

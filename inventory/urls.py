@@ -12,6 +12,8 @@ urlpatterns = [
     path('items/', login_required(views.items), name='items'),
     path('items/<int:id>/', login_required(views.items), name='deptitems'),
     path('deleteitem/<int:id>/', views.deleteitem, name="deleteitem"),
+    path('deleteitemsinventory/<int:id>/', views.deleteitemsinventory, name="deleteitemsinventory"),
+
     path('edititem/<int:id>/', views.edititem, name="edititem"),
 
     path('category/add/<int:id>/', views.addcategory, name="addcategory"),

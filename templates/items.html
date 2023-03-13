@@ -255,8 +255,7 @@
                                     {% endif %}
                                 {% endif %}
 
-                                {% if 'id'  in request.resolver_match.kwargs %}
-                                {% else %}
+                                
                                 <!-- ACTION BUTTONS -->
                                 <td class="text-center borderless align-content-end">
 
@@ -268,7 +267,8 @@
                                     <div class="modal fade " id="deleteitem{{item.id}}" tabindex="-1" aria-labelledby="deleteitemLabel" aria-hidden="true">
                                         {% include 'deleteitem.html' %}
                                     </div>
-
+                                    {% if 'id'  in request.resolver_match.kwargs %}
+                                    {% else %}
 
                                     <!-- edit BUTTON -->
                                     <a href="{% url 'edititem' id=item.id %}" class="shadow-sm btn btn-secondary mx-1 m-2">

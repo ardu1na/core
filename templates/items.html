@@ -12,13 +12,17 @@
 
 {% block breadcrumbs %}
   {{ block.super }}
-    {% if 'id' in request.resolver_match.kwargs %}
-        <li class="breadcrumb-item"><a  class="text-white" href="{% url 'inventories' %}"> Inventories </a></li>
-
-        <li class="breadcrumb-item"><a  class="text-white"href="{% url 'deptitems' id=inventory.id %}">{{ inventory.department }} Inventory </a></li>
+    {% if request.user.is_superuser %}
+        {% if 'id' in request.resolver_match.kwargs %}
+            <li class="breadcrumb-item"><a  class="text-white" href="{% url 'inventories' %}"> Inventories </a></li>
+            <li class="breadcrumb-item"><a  class="text-white"href="{% url 'deptitems' id=inventory.id %}">{{ inventory.department }} Inventory </a></li>
+        {% else %}
+            <li class="breadcrumb-item"><a  class="text-white" href="{% url 'items' %}">Items</a></li>
+        {% endif %}
     {% else %}
-    <li class="breadcrumb-item"><a  class="text-white" href="{% url 'items' %}">Items</a></li>
+        <li class="breadcrumb-item"><a  class="text-white"href="{% url 'deptitems' id=inventory.id %}">{{ inventory.department }} Inventory </a></li>
     {% endif %}
+   
 {% endblock %}
 
 {% block 'content' %}
@@ -55,7 +59,9 @@
                     
                     <div class=" my-3 d-flex flex-row m-auto ">
 
+                        {% if request.user.is_superuser %}
                         <div><a href="{% url 'additem' %}" class="btn btn-outline-primary"><i class="fs-5 fa-solid fa-plus"></i></a></div>
+                        {% endif %}
 
                         {{addform.item}}
                     </div>
@@ -65,7 +71,7 @@
                         Quantity
                     </p>
                     <div class="form-group mb-5 d-flex flex-row">
-                        {{addform.amount}}
+                        {{addform.amount}} #here add with js availables when item is selected
                     </div>
                    
                     {{ addform.inventory }} 

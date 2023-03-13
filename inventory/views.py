@@ -153,9 +153,7 @@ def items(request, id=None):
         'inventory' : inventory,
         'addform': addform,
         'total_items_count': items.count(),
-        'id': id,
-
-    }
+        'id': id,    }
 
     else:
         items = Item.objects.all()
@@ -255,9 +253,10 @@ def edititeminventory(request, id):
 
     if request.method == 'POST':
         editform = EditItemInventoryForm(request.POST, instance=edititem)
+        id_inv = edititem.inventory.id
         if editform.is_valid():
             editform.save()
-            return redirect(reverse('items')+ "?changed")
+            return redirect('deptitems', id=id_inv)
         else:
             return HttpResponseBadRequest("Ups! something gets wrong, go back and try again please.")
 

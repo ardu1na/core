@@ -1,5 +1,5 @@
 {% extends 'layout/base.html' %}
-{% block 'title' %} Página no encontrada {% endblock %}
+{% block 'title' %} 404 {% endblock %}
 
 {% block 'body' %}
 
@@ -8,9 +8,8 @@
 
       <section class="section error-404 min-vh-100 d-flex flex-column align-items-center justify-content-center">
         <h1>404</h1>
-        <h2>Ups! Parece que la página que estás buscando no existe.</h2>
-        <a class="btn" href="{% url 'home' %}">Volver al inicio</a>
-        <img src="/static/assets/img/logo.png" class="img-fluid py-5" alt="Page Not Found">
+        <h2>Ups! Page not found</h2>
+        <a class="btn" href="{% url 'index' %}">Go back</a>
       </section>
 
     </div>

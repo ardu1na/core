@@ -1,5 +1,5 @@
 {% extends 'layout/base.html' %}
-{% block 'title' %} Error del Servidor {% endblock %}
+{% block 'title' %} Server Error {% endblock %}
 
 {% block 'body' %}
 
@@ -10,8 +10,7 @@
         <h1> Ups!!!</h1>
         <h2> Server Error </h2>
 
-        <img src="/static/assets/img/logo.png" class="img-fluid py-5" alt="Server error">
-        <a class="btn" href="{% url 'home' %}">Volver al inicio</a>
+        <a class="btn" href="{% url 'index' %}">Go back</a>
         
       </section>
 

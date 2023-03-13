@@ -101,18 +101,30 @@ def items(request, id=None):
         inventory = Inventory.objects.get(id=id)
         items = ItemInventory.objects.filter(inventory__id=inventory.id)
         if request.method == 'GET':
-            addform = AddItemForm()
+            addform = ItemInventoryForm(initial={'inventory': inventory})
 
-        if request.method == 'POST':
-            if "additems" in request.POST:
-                addform = AddItemForm(request.POST)
+        if "additems" in request.POST:
+            addform = ItemInventoryForm(request.POST, initial={'inventory': editinventory})
+            try:
                 if addform.is_valid():
-                    add_items = addform.cleaned_data['items']
-                    inventory.items.add(*add_items) # add new items to existing related objects
-                    return redirect('deptitems', id=id)  
-
+                    addform.save()
                 else:
-                    return HttpResponseBadRequest("Ups! something gets wrong, go back and try again please.")
+                    raise IntegrityError("Invalid form")
+                
+            except IntegrityError:
+                error_message = "ATENTION: There are not enough quantity of this item available!! Try to add less."
+                data = {
+                    'addform': addform,
+                    'error_message': error_message,
+                    'id':id
+                    
+                }
+            data = {
+                    'addform': addform,
+                    'id':id
+                
+            }
+            return redirect('deptitems', id=id)  
 
         search_query = request.GET.get('q')
 
@@ -124,6 +136,7 @@ def items(request, id=None):
         'inventory' : inventory,
         'addform': addform,
         'total_items_count': items.count(),
+        'id': id,
 
     }
 
@@ -168,9 +181,7 @@ def deleteitemsinventory(request, id):
     item.save()
     item_inventory.delete()
     id = item_inventory.inventory.id
-    data = {
-            'id' : id,
-                    }
+    
     return redirect('deptitems', id=id) 
 
 
@@ -337,6 +348,8 @@ def editinventory(request, id):
                 'editform': InventoryForm(instance=editinventory),
                 'editinventory': editinventory,
                 'id': id,
+                'itemsinventory':itemsinventory,
+
             }
             return render(request, 'editinventory.html', data)
 

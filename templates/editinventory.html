@@ -77,11 +77,16 @@
 
 
                                 <h4 class="mx-4">ITEMS</h4>
+                                    {% for itemi in editinventory.items.all.distinct %}
+                                        
+                                        {{itemi.name}} ({{itemi.available}} available of {{itemi.total}} stock) 
+
+                                    {% endfor %}
 
                                 <ul class="fs-5 mx-4">
                                 {% for item in itemsinventory.all %}
                                     
-                                   <li>{{ item.amount }}  {{item.name}} ({{item.item.available}} available of {{item.item.total}} stock) </li>
+                                   <li>{{ item.amount }}  {{item.item.name}} ({{item.item.available}} available of {{item.item.total}} stock) </li>
 
                                 {% endfor %}    
                                 </ul>                          

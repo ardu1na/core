@@ -26,15 +26,6 @@
 
 {% if 'id'  in request.resolver_match.kwargs %}
 
-<script>
-    var inventoryItems = [];
-
-    {% for item in items %}
-        inventoryItems.push({{ item.item.id }});
-    {% endfor %}
-
-</script>
-
 
 <!-- Add Item into inventory Modal -->
 <div class="modal fade " id="addItem" tabindex="-1" aria-labelledby="addItemLabel" aria-hidden="true">
@@ -362,28 +353,3 @@
 
     
 {% endblock %}
-
-{% block 'extrascripts' %}
-<script>
-  // Obtener los elementos HTML que necesitas
-var itemSelect = document.getElementById('item');
-
-// Filtrar los items que ya están en el inventario
-var filteredOptions = Array.from(itemSelect.options).filter(function(option) {
-    return !inventoryItems.includes(parseInt(option.value));
-});
-
-// Remover todas las opciones actuales
-while (itemSelect.firstChild) {
-    itemSelect.removeChild(itemSelect.firstChild);
-}
-
-// Agregar las opciones filtradas al select
-filteredOptions.forEach(function(option) {
-    itemSelect.appendChild(option);
-});
-
-    </script>
-    
-
-    {% endblock %}

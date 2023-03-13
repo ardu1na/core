@@ -99,7 +99,7 @@ def export_pdf(request, id=None):
 def items(request, id=None):
     if id:
         inventory = Inventory.objects.get(id=id)
-        items = Item.objects.filter(iteminventory__inventory__id=inventory.id)
+        items = ItemInventory.objects.filter(inventory__id=inventory.id)
         if request.method == 'GET':
             addform = AddItemForm()
 

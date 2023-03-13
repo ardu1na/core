@@ -48,6 +48,8 @@ class ItemInventory(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     inventory = models.ForeignKey(Inventory, on_delete=models.CASCADE)
     amount = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)          # Automatically set the field to now when the item is first created.
+    updated_at = models.DateTimeField(auto_now=True)              # Automatically set the field to now every time the item is saved.
     
     def __str__(self):
         return f"{self.item.name} on {self.inventory.department} inventory"

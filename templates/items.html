@@ -145,7 +145,7 @@
                     <h4 class="mx-4">TOTAL : {{total_items_count}} {% if total_items_count == 1 %}item {% else %}items {% endif %}</h4>
 
                 </div>
-                <h1 class="my-4 text-center">{{ inventory.name }} Inventory</h1>
+                <h1 class="my-4 text-center">{{ inventory.department }} Inventory</h1>
             {% else %}
                 <div class="d-flex flex-row-reverse">  
                     <a class="btn btn-primary mb-3 mx-4 fs-5 shadow-lg" href="{% url 'export_pdf' %}?q={{ request.GET.q }}">
@@ -185,7 +185,8 @@
                     <thead >
                     <tr >
                         <th scope="col" class=" py-4">NAME</th>
-                        <th scope="col"  class="py-4">DATE CREATED</th>
+                        <th scope="col"  class="py-4"> {% if 'id'  in request.resolver_match.kwargs %}
+                            DATE ADDED {% else %}DATE CREATED{% endif %}</th>
                         <th scope="col" class=" py-4">DATE UPDATED</th>
                         {% if 'id'  in request.resolver_match.kwargs %}
                         {% else %}
@@ -203,10 +204,21 @@
                     <tbody>
                         {% for item in items %}
                             <tr>
-                                <td><a href="{% url 'edititem' id=item.id %}">{{item.name}}</a></td>
-                                <td>{{item.created_at|date:"d/m/Y"}}</td>
-                                <td>{{item.updated_at|date:"d/m/Y"}}</td>
-
+                                <td>
+                                    {% if 'id'  in request.resolver_match.kwargs %}
+                                    <a href="{% url 'edititem' id=item.id %}">{{item.item.name}}</a></td>
+                                    {% else %}
+                                    <a href="{% url 'edititem' id=item.id %}">{{item.name}}</a></td>
+                                    {% endif %}
+                                {% if 'id'  in request.resolver_match.kwargs %}
+                                    <td>{{item.created_at|date:"d/m/Y"}}</td>
+                                    <td>{{item.updated_at|date:"d/m/Y"}}</td>
+                                {% else %}
+                                    <td>{{item.created_at|date:"d/m/Y"}}</td>
+                                    <td>{{item.updated_at|date:"d/m/Y"}}</td>
+                                {% endif %}
+                                
+                                
                                 {% if 'id'  in request.resolver_match.kwargs %}
                                 {% else %}
                                     <td>
@@ -228,12 +240,23 @@
                                     <td>{{item.available}}</td>
                                 {% endif %}
 
-                                {% if item.category %}
-                                <td><a href="{% url 'editcategory' id=item.category.id %}">{{item.category}}</a></td>
+                                {% if 'id'  in request.resolver_match.kwargs %}
+
+                                    {% if item.item.category %}
+                                        <td><a href="{% url 'editcategory' id=item.item.category.id %}">{{item.item.category}}</a></td>
+                                    {% else %}
+                                        <td>None</td>
+                                    {% endif %}
                                 {% else %}
-                                <td>None</td>
+                                    {% if item.category %}
+                                        <td><a href="{% url 'editcategory' id=item.category.id %}">{{item.category}}</a></td>
+                                    {% else %}
+                                        <td>None</td>
+                                    {% endif %}
                                 {% endif %}
 
+                                {% if 'id'  in request.resolver_match.kwargs %}
+                                {% else %}
                                 <!-- ACTION BUTTONS -->
                                 <td class="text-center borderless align-content-end">
 
@@ -253,6 +276,7 @@
                                     </a>
 
                                 </td>
+                                {% endif %}
                             </tr>                  
                         {% endfor %}
                     </tbody>

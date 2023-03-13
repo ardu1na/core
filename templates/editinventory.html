@@ -1,6 +1,13 @@
 {% extends 'layout/base.html' %}
 {% block 'title' %} Change {{editinventory.name}} {% endblock %}
+{% block extrastyles %}
+<style>
+    .hidden {
+        display: none;
+      }
 
+</style>
+{% endblock %}
 
 
 {% block breadcrumbs %}
@@ -12,6 +19,17 @@
 
 
 {% block 'content' %}
+
+
+<script>
+    var inventoryItems = [];
+
+    {% for item in editinventory.items.all %}
+        inventoryItems.push({{ item.id }});
+    {% endfor %}
+
+</script>
+
 
     
 <!-- Add Item into inventory Modal -->
@@ -116,3 +134,30 @@
     </div>
 
 {% endblock %}
+
+
+
+
+{% block 'extrascripts' %}
+<script>
+    // Obtener los elementos HTML que necesitas
+    var itemSelect = document.getElementById('item');
+
+    // Filtrar los items que no están en el inventario
+    var filteredOptions = Array.from(itemSelect.options).filter(function(option) {
+        return !inventoryItems.includes(parseInt(option.value));
+    });
+
+    // Deshabilitar las opciones que ya están en el inventario
+    Array.from(itemSelect.options).forEach(function(option) {
+        if (inventoryItems.includes(parseInt(option.value))) {
+            option.disabled = true;
+        }
+    });
+
+    // Habilitar las opciones filtradas
+    filteredOptions.forEach(function(option) {
+        option.disabled = false;
+    });
+</script>
+{% endblock%}

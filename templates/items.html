@@ -189,6 +189,7 @@
                             DATE ADDED {% else %}DATE CREATED{% endif %}</th>
                         <th scope="col" class=" py-4">DATE UPDATED</th>
                         {% if 'id'  in request.resolver_match.kwargs %}
+                        <th scope="col" class=" py-4">QUANTITY</th>
                         {% else %}
                         <th scope="col" class=" py-4">PRESENT IN</th>
                         <th scope="col" class=" py-4">TOTAL</th>
@@ -220,6 +221,8 @@
                                 
                                 
                                 {% if 'id'  in request.resolver_match.kwargs %}
+                                <td>{{item.amount}}</td>
+
                                 {% else %}
                                     <td>
                                     {% if item.inventories.all %}

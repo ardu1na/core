@@ -117,7 +117,7 @@ def items(request, id=None):
         search_query = request.GET.get('q')
 
         if search_query:
-            items = items.filter(Q(name__icontains=search_query) | Q(category__name__icontains=search_query))
+            items = items.filter(Q(item__name__icontains=search_query) | Q(item__category__name__icontains=search_query))
             
         data = {
         'items' : items,

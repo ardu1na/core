@@ -1,7 +1,14 @@
 {% extends 'layout/base.html' %}
 {% block 'title' %} Items {% endblock %}
 
-
+{% block extrastyles %}
+<style>
+    .hidden {
+        display: none;
+      }
+      
+</style>
+{% endblock %}
 
 {% block breadcrumbs %}
   {{ block.super }}
@@ -18,6 +25,17 @@
 
 
 {% if 'id'  in request.resolver_match.kwargs %}
+
+<script>
+    var inventoryItems = [];
+
+    {% for item in items %}
+        inventoryItems.push({{ item.item.id }});
+    {% endfor %}
+
+</script>
+
+
 <!-- Add Item into inventory Modal -->
 <div class="modal fade " id="addItem" tabindex="-1" aria-labelledby="addItemLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -43,7 +61,7 @@
                     <div class="form-group mb-5 d-flex flex-row">
                         {{addform.amount}}
                     </div>
-                   
+
                     {{ addform.inventory }} 
                 </div>
                 <div class="modal-footer">
@@ -230,7 +248,7 @@
                             <tr>
                                 <td>
                                     {% if 'id'  in request.resolver_match.kwargs %}
-                                    <a href="{% url 'edititem' id=item.id %}">{{item.item.name}}</a></td>
+                                    <a href="{% url 'edititem' id=item.item.id %}">{{item.item.name}}</a></td>
                                     {% else %}
                                     <a href="{% url 'edititem' id=item.id %}">{{item.name}}</a></td>
                                     {% endif %}
@@ -341,4 +359,31 @@
         </div> 
         {% endif %}      
     </div>    
+
+    
 {% endblock %}
+
+{% block 'extrascripts' %}
+<script>
+  // Obtener los elementos HTML que necesitas
+var itemSelect = document.getElementById('item');
+
+// Filtrar los items que ya están en el inventario
+var filteredOptions = Array.from(itemSelect.options).filter(function(option) {
+    return !inventoryItems.includes(parseInt(option.value));
+});
+
+// Remover todas las opciones actuales
+while (itemSelect.firstChild) {
+    itemSelect.removeChild(itemSelect.firstChild);
+}
+
+// Agregar las opciones filtradas al select
+filteredOptions.forEach(function(option) {
+    itemSelect.appendChild(option);
+});
+
+    </script>
+    
+
+    {% endblock %}

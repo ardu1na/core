@@ -115,8 +115,11 @@ def items(request, id=None):
                         'addform': addform,
                         'id':id,
                     }
+
                     return redirect('deptitems', id=id)
                 else:
+                    print(addform.errors)
+
                     raise IntegrityError("Invalid form")
             except IntegrityError:
                 error_message = "ATENTION: There are not enough quantity of this item available!! Try to add less."
@@ -129,7 +132,9 @@ def items(request, id=None):
                     'id': id,
                     'error_message': error_message,
                 }
+                print(addform.errors)
                 return render(request, 'items.html', data)
+
         data = {
             'items' : items,
             'inventory' : inventory,

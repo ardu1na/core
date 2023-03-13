@@ -8,7 +8,7 @@
     {% if 'id' in request.resolver_match.kwargs %}
         <li class="breadcrumb-item"><a  class="text-white" href="{% url 'inventories' %}"> Inventories </a></li>
 
-        <li class="breadcrumb-item"><a  class="text-white"href="{% url 'deptitems' id=inventory.id %}">{{ inventory.name }} Inventory </a></li>
+        <li class="breadcrumb-item"><a  class="text-white"href="{% url 'deptitems' id=inventory.id %}">{{ inventory.department }} Inventory </a></li>
     {% else %}
     <li class="breadcrumb-item"><a  class="text-white" href="{% url 'items' %}">Items</a></li>
     {% endif %}

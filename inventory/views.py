@@ -167,7 +167,11 @@ def deleteitemsinventory(request, id):
     item.available += item_inventory.amount
     item.save()
     item_inventory.delete()
-    return redirect(reverse('items')+ "?deleted")
+    id = item_inventory.inventory.id
+    data = {
+            'id' : id,
+                    }
+    return redirect('deptitems', id=id) 
 
 
 

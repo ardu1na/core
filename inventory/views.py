@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.http import HttpResponseBadRequest, HttpResponse
 from django.db.models import Q
 from django.db import IntegrityError
+from django.core.paginator import Paginator
 
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
@@ -247,9 +248,11 @@ def edititeminventory(request, id):
 
 
 
-
 def categories(request):
-    categories = Category.objects.all()
+    category_list = Category.objects.all()
+    paginator = Paginator(category_list, 10) 
+    page = request.GET.get('page')
+    categories = paginator.get_page(page)
     if request.method == 'GET':
         form = CategoryForm()
     if request.method == 'POST':

@@ -78,8 +78,6 @@ def export_pdf(request, id=None):
 
 
 
-
-
 def items(request, id=None):
     if id:
         inventory = Inventory.objects.get(id=id)
@@ -135,13 +133,11 @@ def items(request, id=None):
         'id': id,    }
 
     else:
-        items = Item.objects.all()
-               
+        items = Item.objects.all()               
         search_query = request.GET.get('q')
-
         if search_query:
             items = items.filter(Q(name__icontains=search_query) | Q(category__name__icontains=search_query))
-
+            
         if request.method == 'GET':
             addform = ItemForm()
             
@@ -157,7 +153,6 @@ def items(request, id=None):
             'items' : items,
             'addform' : addform,
             'total_items_count': items.count(),
-
         }
     return render  (request, 'items.html', data)
 

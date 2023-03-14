@@ -324,8 +324,14 @@ def deletecategory(request, id):
 
 
 
+
+
+
 def inventories(request):
-    inventories = Inventory.objects.all()
+    inventory_list = Inventory.objects.all()
+    paginator = Paginator(inventory_list, 10)
+    page = request.GET.get('page')
+    inventories = paginator.get_page(page)
     addform=InventoryForm()
     search_query = request.GET.get('q')
 

@@ -63,7 +63,7 @@
                         <div><a href="{% url 'additem' %}" class="btn btn-outline-primary"><i class="fs-5 fa-solid fa-plus"></i></a></div>
                         {% endif %}
 
-                        {{addform.item}} # if we already have this item, we should just change its amount
+                        {{addform.item}} # if we already have this item, we should just change it amount in edit item
                     </div>
 
 
@@ -71,7 +71,7 @@
                         Quantity
                     </p>
                     <div class="form-group mb-5 d-flex flex-row">
-                        {{addform.amount}} #here add with js availables when item is selected
+                        {{addform.amount}} 
                     </div>
                    
                     {{ addform.inventory }} 

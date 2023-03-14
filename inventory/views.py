@@ -9,12 +9,16 @@ from django.db import IntegrityError
 
 from reportlab.pdfgen import canvas
 
+from reportlab.platypus import Table, TableStyle
+from reportlab.lib import colors
+
+
 from inventory.models import Item, Inventory, Category, ItemInventory
 from inventory.forms import ItemForm, InventoryForm, CategoryForm,  ItemInventoryForm, EditItemInventoryForm
 
 def index(request):    
     return render (request, 'index.html', {})
-
+"""
 def export_pdf(request, id=None):
     # Get the data to include in the PDF document
     search_query = request.GET.get('q')
@@ -91,6 +95,169 @@ def export_pdf(request, id=None):
     response = HttpResponse(buffer, content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename={filename}'
     
+    return response
+
+
+
+def export_pdf(request, id=None):
+    # Get the data to include in the PDF document
+    search_query = request.GET.get('q')
+
+    if id:
+        inventory = Inventory.objects.get(id=id)
+
+        if search_query:
+            items = Item.objects.filter(iteminventory__inventory__id=inventory.id).filter(Q(name__icontains=search_query) | Q(category__name__icontains=search_query))
+            filename = f'{inventory.department.lower().replace(" ", "_")}_inventory_search_{search_query.lower().replace(" ", "_")}_report.pdf'
+        else:
+            items = Item.objects.filter(iteminventory__inventory__id=inventory.id)
+            filename = f'{inventory.department.lower().replace(" ", "_")}_inventory_report.pdf'
+    else:
+        if search_query:
+            items = Item.objects.filter(Q(name__icontains=search_query) | Q(category__name__icontains=search_query))
+            filename = f'all_items_search_{search_query.lower().replace(" ", "_")}_report.pdf'
+        else:
+            items = Item.objects.all()
+            filename = 'all_items_report.pdf'
+
+    # Create a BytesIO object to write the PDF document to
+    buffer = BytesIO()
+
+    # Create the PDF object, using the BytesIO object as its "file."
+    pdf = canvas.Canvas(buffer)
+
+    # Define the table data as a list of lists
+    data = [['ID', 'Name', 'Category', 'Created at', 'Last Updated']]
+    for item in items:
+        a = item.created_at
+        created_at = a.strftime("%d %b %Y %H:%M")
+        b = item.updated_at
+        updated_at = b.strftime("%d %b %Y %H:%M")
+
+        if item.category:
+            data.append([str(item.id), item.name, item.category.name, created_at, updated_at])
+        else:
+            data.append([str(item.id), item.name, 'None Category', created_at, updated_at])
+
+    # Define the table style
+    table_style = TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 14),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('TEXTCOLOR', (0, 1), (-1, -1), colors.black),
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 1), (-1, -1), 12),
+        ('ALIGN', (0, 1), (-1, -1), 'LEFT'),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+    ])
+
+    # Create the table and apply the style
+    table = Table(data)
+    table.setStyle(table_style)
+
+    # Draw the table on the PDF
+    if id:
+        pdf.continueOnNextPage(2*inch)
+        pdf.drawCentredString(300, 770, f'{inventory.department} Inventory Report')
+        if search_query:
+            pdf.drawCentredString(300, 740, f'Search Query: {search_query}')
+            pdf.line(30, 710, 550, 710)
+            table.wrapOn(pdf, 800, 600)
+            table.drawOn(pdf, 30, 660)
+
+        # Close the PDF object cleanly, and we're done.
+    pdf.showPage()
+    pdf.save()
+
+    # FileResponse sets the Content-Disposition header so that browsers
+    # present the option to save the file.
+    buffer.seek(0)
+    return FileResponse(buffer, as_attachment=True, filename=filename)
+
+"""
+
+
+from io import BytesIO
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+from reportlab.pdfgen import canvas
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.units import inch
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+from django.db.models import Q
+from .models import Inventory, Item
+
+def export_pdf(request, id=None):
+    # Get the data to include in the PDF document
+    search_query = request.GET.get('q')
+
+    if id:
+        inventory = get_object_or_404(Inventory, id=id)
+
+        if search_query:
+            items = Item.objects.filter(iteminventory__inventory__id=inventory.id).filter(Q(name__icontains=search_query) | Q(category__name__icontains=search_query))
+            filename = f'{inventory.department.lower().replace(" ", "")}_inventory_search_{search_query.lower().replace(" ", "")}_report.pdf'
+        else:
+            items = Item.objects.filter(iteminventory__inventory__id=inventory.id)
+            filename = f'{inventory.department.lower().replace(" ", "_")}_inventory_report.pdf'
+    else:
+        if search_query:
+            items = Item.objects.filter(Q(name__icontains=search_query) | Q(category__name__icontains=search_query))
+            filename = f'all_items_search_{search_query.lower().replace(" ", "_")}_report.pdf'
+        else:
+            items = Item.objects.all()
+            filename = 'all_items_report.pdf'
+
+    # Create a BytesIO object to write the PDF document to
+    buffer = BytesIO()
+
+    # Create the PDF object, using the BytesIO object as its "file."
+    doc = SimpleDocTemplate(buffer, pagesize=letter)
+    elements = []
+
+    # Define the table data and table style
+    table_data = [['ID', 'Name', 'Category', 'Created At', 'Last Updated']]
+    for item in items:
+        created_at = item.created_at.strftime("%d %b %Y %H:%M")
+        updated_at = item.updated_at.strftime("%d %b %Y %H:%M")
+        category_name = item.category.name if item.category else 'None'
+        table_data.append([str(item.id), item.name, category_name, created_at, updated_at])
+    
+    table = Table(table_data)
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 14),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 1), (-1, -1), 12),
+        ('LEFTPADDING', (0, 1), (-1, -1), 5),
+        ('RIGHTPADDING', (0, 1),(-1, -1), 5),
+        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.whitesmoke, colors.lightgrey]),
+        ('ROWBACKGROUNDS', (0, 1), (-1, 1), [colors.grey, colors.grey]),
+        ('TEXTCOLOR', (0, 1), (-1, -1), colors.black),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE')
+        ]))
+    elements.append(table)
+
+    # add the elements to the document
+    doc.build(elements)
+
+    # return the response
+    pdf = buffer.getvalue()
+    buffer.close()
+    response.write(pdf)
     return response
 
 

@@ -194,12 +194,9 @@ from django.db.models import Q
 from .models import Inventory, Item
 
 def export_pdf(request, id=None):
-    # Get the data to include in the PDF document
     search_query = request.GET.get('q')
-
     if id:
         inventory = get_object_or_404(Inventory, id=id)
-
         if search_query:
             items = Item.objects.filter(iteminventory__inventory__id=inventory.id).filter(Q(name__icontains=search_query) | Q(category__name__icontains=search_query))
             filename = f'{inventory.department.lower().replace(" ", "")}_inventory_search_{search_query.lower().replace(" ", "")}_report.pdf'
@@ -213,23 +210,16 @@ def export_pdf(request, id=None):
         else:
             items = Item.objects.all()
             filename = 'all_items_report.pdf'
-
-    # Create a BytesIO object to write the PDF document to
     buffer = BytesIO()
-
-    # Create the PDF object, using the BytesIO object as its "file."
     doc = SimpleDocTemplate(buffer, pagesize=letter)
     elements = []
-
-    # Define the table data and table style
     table_data = [['ID', 'Name', 'Category', 'Created At', 'Last Updated']]
     for item in items:
         created_at = item.created_at.strftime("%d %b %Y %H:%M")
         updated_at = item.updated_at.strftime("%d %b %Y %H:%M")
         category_name = item.category.name if item.category else 'None'
         table_data.append([str(item.id), item.name, category_name, created_at, updated_at])
-    
-    table = Table(table_data)
+        table = Table(table_data)
     table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
@@ -250,15 +240,14 @@ def export_pdf(request, id=None):
         ('VALIGN', (0, 0), (-1, -1), 'MIDDLE')
         ]))
     elements.append(table)
-
-    # add the elements to the document
     doc.build(elements)
-
-    # return the response
     pdf = buffer.getvalue()
     buffer.close()
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'filename="{filename}"'
     response.write(pdf)
     return response
+
 
 
 

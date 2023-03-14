@@ -25,7 +25,9 @@ def index(request):
 
 
 def export_pdf(request, id=None):
+    
     search_query = request.GET.get('q')
+    
     if id:
         inventory = get_object_or_404(Inventory, id=id)
         if search_query:
@@ -33,7 +35,7 @@ def export_pdf(request, id=None):
             filename = f'{inventory.department.lower().replace(" ", "")}_inventory_search_{search_query.lower().replace(" ", "")}_report.pdf'
         else:
             items = Item.objects.filter(iteminventory__inventory__id=inventory.id)
-            filename = f'{inventory.department.lower().replace(" ", "_")}_inventory_report.pdf'
+            filename = f'{inventory.department.lower().replace(" ", "_")}_inventory_report.pdf'               
     else:
         if search_query:
             items = Item.objects.filter(Q(name__icontains=search_query) | Q(category__name__icontains=search_query))
@@ -75,7 +77,7 @@ def export_pdf(request, id=None):
     pdf = buffer.getvalue()
     buffer.close()
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'filename="{filename}"'
+    response['Content-Disposition'] = f'attachment; filename={filename}'
     response.write(pdf)
     return response
 

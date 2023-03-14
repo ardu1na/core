@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 
 class Category(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return self.name
@@ -36,7 +36,7 @@ class Item(models.Model):
 
 
 class Inventory(models.Model):
-    department = models.CharField(max_length=150)
+    department = models.CharField(max_length=150, unique=True)
     user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE, related_name="inventory")
 
     items = models.ManyToManyField(Item, through='ItemInventory', related_name="inventories")

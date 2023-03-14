@@ -21,6 +21,8 @@ def index(request):
     return render (request, 'index.html', {})
 
 
+
+
 def export_pdf(request, id=None):
     search_query = request.GET.get('q')
     if id:
@@ -243,6 +245,27 @@ def edititeminventory(request, id):
             }
             return render (request, 'edititeminventory.html', data)
 
+
+
+
+def categories(request):
+    categories = Category.objects.all()
+    if request.method == 'GET':
+        form = CategoryForm()
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('categories')+ "?added")
+        else:
+            return HttpResponseBadRequest("Ups! something gets wrong, go back and try again please.") 
+    data = {
+        'categories' : categories,
+        'form' : form,
+    }    
+    return render (request, 'categories.html', data)
+
+
 def addcategory(request, id=None):
     if id:
         item = Item.objects.get(id=id)
@@ -262,7 +285,7 @@ def addcategory(request, id=None):
             addform = CategoryForm(request.POST)
             if addform.is_valid():
                 addform.save()
-                return redirect(reverse('items') + "?newcategory")
+                return redirect(reverse('categories') + "?newcategory")
             else:
                 return HttpResponseBadRequest("Ups! something gets wrong, go back and try again please.")       
     data = {
@@ -286,7 +309,7 @@ def editcategory(request, id):
         editform = CategoryForm(request.POST, instance=category)
         if editform.is_valid():
             editform.save()
-            return redirect(reverse('items')+ "?changed")
+            return redirect(reverse('categories')+ "?changed")
         else:
             return HttpResponseBadRequest("Ups! something gets wrong, go back and try again please.")
 
@@ -294,7 +317,7 @@ def editcategory(request, id):
 def deletecategory(request, id):
     category = Category.objects.get(id=id)
     category.delete()
-    return redirect(reverse('items')+ "?categorydeleted")
+    return redirect(reverse('categories')+ "?categorydeleted")
 
 
 

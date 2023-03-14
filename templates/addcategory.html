@@ -5,7 +5,7 @@
 {% block breadcrumbs %}
 {{ block.super }}
 
-      <li class="breadcrumb-item"><a  class="text-white" href="{% url 'items' %}">All Items  </a></li>
+      <li class="breadcrumb-item"><a  class="text-white" href="{% url 'categories' %}">Categories  </a></li>
       <li class="breadcrumb-item"><a  class="text-white">New Category</a></li>
 {% endblock %}
 {% block 'content' %}
@@ -39,6 +39,10 @@
                         </form>
                     </div>
                 </div>
+
+                <a href="{% url 'categories' %}" class="btn fs-7 mx-2 my-5">
+                    <i class="fa-solid fa-arrow-left me-2 fs-7"></i> Go back
+                </a>
 
         </div>
     </div>

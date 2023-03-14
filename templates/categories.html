@@ -1,0 +1,80 @@
+{% extends 'layout/base.html' %}
+{% block 'title' %} CATEGORIES {% endblock %}
+
+{% block breadcrumbs %}
+  {{ block.super }}
+
+        <li class="breadcrumb-item"><a  class="text-white" href="{% url 'categories' %}"> Categories </a></li>
+       
+{% endblock %}
+
+
+{% block 'content' %}
+
+
+
+
+
+
+    <div class="container mx-5">
+        {% if categories %}
+            <h1 class="my-3 text-center">CATEGORIES</h1>
+
+            <div class="d-flex flex-row-reverse pb-1 mx-4">
+                <a class="btn btn-light fs-4 shadow-l px-4" href="{% url 'addnewcategory' %}">
+                    <i class="fa-solid fa-plus me-2"></i> <strong>Add some</strong>
+                </a>
+            </div>
+
+            <!-- TABLE ALL categories -->
+            <div class="py-3 px-3 my-4 text-center">
+                <table class="table table-responsive table-bordered align-middle table-hover rounded-lg bg-white shadow-lg">
+                    <thead>
+                    <tr>
+                        <th scope="col" class=" py-4">Category.</th>
+                        <th class="text-center  py-4"></th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for category in categories %}
+                            <tr>
+                                <td><a href="{% url 'editcategory' id=category.id %}">{{category.name}}</a></td>                              
+                                  
+
+                                <!-- ACTION BUTTONS -->
+                                <td class="borderless">
+
+                                    <!-- delete BUTTON -->
+                                    <button type="button" class="shadow-sm btn btn-danger me-2" data-bs-toggle="modal" data-bs-target="#deletecategory{{category.id}}">
+                                        <i class="fa-solid fa-trash fs-7 "></i>
+                                    </button>
+
+                                    <div class="modal fade " id="deletecategory{{category.id}}" tabindex="-1" aria-labelledby="deletecategoryLabel" aria-hidden="true">
+                                        {% include 'deletecategory.html' %}
+                                    </div>
+
+
+                                    <!-- edit BUTTON -->
+                                    <a href="{% url 'editcategory' id=category.id %}" class="shadow-sm btn btn-secondary">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </a>
+
+                                </td>
+                            </tr>                  
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>     <!-- END TABLE ALL categories -->
+
+        {% else %}
+        <div class="col-12 d-flex flex-row justify-content-around pb-4">
+            <h3> No categories yet... </h3>
+
+            <a class="btn btn-light fs-4 shadow-l px-4" href="{% url 'addnewcategory' %}">
+                <i class="fa-solid fa-plus me-2"></i> <strong>Add some</strong>
+            </a>
+        </div> 
+        {% endif %}      
+    </div>    
+{% endblock %}

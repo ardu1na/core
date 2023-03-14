@@ -22,6 +22,8 @@ urlpatterns = [
     path('edititem/<int:id>/', user_passes_test(is_superuser)(views.edititem), name="edititem"),
     path('edititeminventory/<int:id>/', login_required(views.edititeminventory), name="edititeminventory"),
 
+
+    path('categories/', user_passes_test(is_superuser)(views.categories), name='categories'),
     path('category/add/<int:id>/', user_passes_test(is_superuser)(views.addcategory), name="addcategory"),
     path('category/add/', user_passes_test(is_superuser)(views.addcategory), name="addnewcategory"),
     path('category/edit/<int:id>/', user_passes_test(is_superuser)(views.editcategory), name="editcategory"), 
